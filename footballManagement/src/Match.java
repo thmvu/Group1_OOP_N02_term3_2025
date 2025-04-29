@@ -11,4 +11,13 @@ public class Match{
         team = Team;
         return team;
     }
+
+    public String matchBuild(){
+
+        //Match = Team 1 vs Team
+       
+        String test ="abc";
+
+        return test;
+    }
 }
