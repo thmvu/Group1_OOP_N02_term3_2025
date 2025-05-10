@@ -1,4 +1,4 @@
-public class Main {
+public class Main2 {
     public static void main(String[] args){
         Concho cho_shiba = new Concho();
         cho_shiba.sua();
