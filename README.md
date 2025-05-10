@@ -56,6 +56,5 @@ String tên loại
 Quản lý thiết bị theo loại
 {
 int mã thiết bị
-
 int mã loại
 }
