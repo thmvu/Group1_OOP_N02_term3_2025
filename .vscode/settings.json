@@ -1,0 +1,7 @@
+{
+    "java.project.sourcePaths": [
+        "StorageManagement/src",
+        "StorageManagement/test"
+    ],
+    "java.project.referencedLibraries": []
+}

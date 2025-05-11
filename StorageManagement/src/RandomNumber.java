@@ -1,6 +1,8 @@
+import java.util.Random;
+
 public class RandomNumber {
-    public static void main(String[] args) {
-        int number = TestRandomNumber.getRandomNumber(1, 100);
-        System.out.printf("So ngau nhien la: %d\n", number);
+    public static int getRandomNumber(int x, int y) {
+        Random random = new Random();
+        return random.nextInt(y - x + 1) + x;
     }
 }
