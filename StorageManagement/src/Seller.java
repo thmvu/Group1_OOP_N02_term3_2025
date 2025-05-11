@@ -1,5 +1,5 @@
-package model;
-public class Customer extends User         //tính kế thừa 
+
+public class Seller extends User 
 {
     public void signUp(int userId, String name, String gender, String birthDate, String phoneNumber,        //tính đa hình
                 String email, String address, String password, String userType) 
@@ -12,11 +12,11 @@ public class Customer extends User         //tính kế thừa
         this.email = email;
         this.address = address;
         this.password = password;
-        this.userType = "Khách hàng";
+        this.userType = "Nhà cung cấp";
     }
-    
-    public void buy(String productName)     //mua sản phẩm
+
+    public void sell(String productName)        //bán sản phẩm
     {
-        System.out.println(name + " đã mua sản phẩm: " + productName);
+        System.out.println(name + " đã đăng bán sản phẩm: " + productName);
     }
 }

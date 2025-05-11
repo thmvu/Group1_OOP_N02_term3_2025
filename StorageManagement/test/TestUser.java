@@ -1,14 +1,13 @@
-import model.Customer;
-import model.Seller;
+
 public class TestUser 
 {
     public static void main(String[] args) 
     {
         Customer customer_1 = new Customer();
-        customer_1.signUp(001, "Nguyễn Văn An", "Nam", "2005-12-16", 
-                  "0901239303", "a@gmail.com", "Hà Nội", "123456", "");
+        customer_1.signUp(001, "Nguyễn Văn A", "Nam", "2005-1-16", 
+                  "0987654321", "a@gmail.com", "Hà Nội", "123456", "");
         Seller seller_1 = new Seller();
-        seller_1.signUp(001, "Trịnh Thị Lan Nhi", "Nữ", "2005-01-01", 
+        seller_1.signUp(001, "Nguyễn Thị BB", "Nữ", "2005-01-01", 
                 "0912345678", "b@gmail.com", "Hồ Chí Minh", "abcdef", "");
         
         System.out.println("== Thông tin Khách hàng ==");
