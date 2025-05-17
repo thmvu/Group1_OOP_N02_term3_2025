@@ -7,16 +7,61 @@ Quản lí hệ thống kho hàng nhằm tránh thất thoát cũng như để q
 Từ Hữu Minh Vũ 
 Nguyễn Hữu Tình
 Vũ Viết Tuấn
-## Đối tượng tham chiếu 
-   Quản lý thiết bị
+# Mô tả Đối tượng Quản lý thiết bị
+
+## Mô tả
+
+```
+Thiết bị (Device)
+
+Người dùng (User)
+
+Thiết bị và Người dùng (Device-User)
 
 
+```
 
-class Thiết bị{
-int ma thiết bị
+## Xây dựng Class 
+
+Thiết bị
+
+```
+class Thietbi{
+   //tat ca thông tin miêu tả thiết bị
+
+int maThietBi;
 
 String tên thiết bị
 }
+
+```
+
+Người dùng 
+```
+
+class Nguoidung{
+
+   int maNguoiDung;
+   String tenNguoiDung;
+
+   //cac thong tin mo ta nguoi
+
+
+}
+```
+
+Thiết bị người dùng
+
+```
+class thietbi_nguoidung{
+
+   int maThietBi;
+   int maNguoiDung;
+}
+
+
+```
+
 class Quản lý{
 
 int  mã thiết bị
@@ -40,7 +85,16 @@ Date Ngay sinh
  
 
 
+# PHuong thuc hoat dong (Operations)
 
+```
+Quản lý số lượng
+Quản lý phân loại
+Quản lý thiết bị theo loại
+
+
+
+```
 Quản lý số lượng
 {
 int mã thiết bị
