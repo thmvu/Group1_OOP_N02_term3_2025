@@ -1,83 +1,45 @@
 public class User {
-    private int userId;
-    private String name;
-    private String gender;
-    private String birthDate;
-    private String phoneNumber;
+    private String userId;
+    private String userName;
     private String email;
-    private String address;
-    private String password;
-    private String userType;
+    private int tuoi;
 
-    // Constructor mặc định
-    public User() {
-    }
-
-    // Phương thức đăng ký
-    public void signUp(int userId, String name, String gender, String birthDate, String phoneNumber,
-                       String email, String address, String password, String userType) {
+    public User(String userId, String userName, String email, int tuoi) {
         this.userId = userId;
-        this.name = name;
-        this.gender = gender;
-        this.birthDate = birthDate;
-        this.phoneNumber = phoneNumber;
+        this.userName = userName;
         this.email = email;
-        this.address = address;
-        this.password = password;
-        this.userType = userType;
+        this.tuoi = tuoi;
     }
 
-    // Phương thức đăng nhập
-    public boolean login(String loginId, String password) {
-        return (loginId.equals(this.phoneNumber) || loginId.equals(this.email)) && password.equals(this.password);
-    }
-
-    // Hiển thị thông tin người dùng
-    public void showUser() {
-        System.out.println("Mã người dùng: " + getUserId());
-        System.out.println("Tên: " + getName());
-        System.out.println("Giới tính: " + getGender());
-        System.out.println("Ngày sinh: " + getBirthDate());
-        System.out.println("SĐT: " + getPhoneNumber());
-        System.out.println("Email: " + getEmail());
-        System.out.println("Địa chỉ: " + getAddress());
-        System.out.println("Loại người dùng: " + getUserType());
-    }
-
-    // Getter methods
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public String getName() {
-        return name;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getGender() {
-        return gender;
+    public String getUserName() {
+        return userName;
     }
 
-    public String getBirthDate() {
-        return birthDate;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getAddress() {
-        return address;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getUserType() {
-        return userType;
+    public int getTuoi() {
+        return tuoi;
     }
 
-    public String getPassword() {
-        return password;
+    public void setTuoi(int tuoi) {
+        this.tuoi = tuoi;
     }
 }
