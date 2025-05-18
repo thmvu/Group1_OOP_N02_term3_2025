@@ -1,5 +1,5 @@
 
-public class Seller extends User 
+public class Seller extends User1 
 {
     public void signUp(int userId, String name, String gender, String birthDate, String phoneNumber,        //tính đa hình
                 String email, String address, String password, String userType) 

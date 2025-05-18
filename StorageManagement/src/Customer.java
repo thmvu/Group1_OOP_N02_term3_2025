@@ -1,22 +1,27 @@
+public class Customer extends User1 {
+    private String customerLevel;
 
-public class Customer extends User         //tính kế thừa 
-{
-    public void signUp(int userId, String name, String gender, String birthDate, String phoneNumber,        //tính đa hình
-                String email, String address, String password, String userType) 
-    {
-        this.userId = userId;
-        this.name = name;
-        this.gender = gender;
-        this.birthDate = birthDate;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.address = address;
-        this.password = password;
-        this.userType = "Khách hàng";
+    public Customer(String userId, String name, String email, String phoneNumber, String gender,
+                    String birthDate, String address, String password, String userType,
+                    String customerLevel) {
+        super(userId, name, email, phoneNumber, gender, birthDate, address, password, userType);
+        this.customerLevel = customerLevel;
     }
-    
-    public void buy(String productName)     //mua sản phẩm
-    {
-        System.out.println(name + " đã mua sản phẩm: " + productName);
+
+    public String getCustomerLevel() {
+        return customerLevel;
+    }
+
+    public void setCustomerLevel(String customerLevel) {
+        this.customerLevel = customerLevel;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", level='" + customerLevel + '\'' +
+                '}';
     }
 }

@@ -1,45 +1,34 @@
 public class User {
-    private String userId;
-    private String userName;
-    private String email;
-    private int tuoi;
+    protected String userId;
+    protected String name;
+    protected String email;
+    protected String phoneNumber;
+    protected String gender;
+    protected String birthDate;
+    protected String address;
+    protected String password;
+    protected String userType;
 
-    public User(String userId, String userName, String email, int tuoi) {
+    // Constructor đầy đủ
+    public User(String userId, String name, String email, String phoneNumber,
+                String gender, String birthDate, String address,
+                String password, String userType) {
         this.userId = userId;
-        this.userName = userName;
+        this.name = name;
         this.email = email;
-        this.tuoi = tuoi;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.birthDate = birthDate;
+        this.address = address;
+        this.password = password;
+        this.userType = userType;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public String getName() {
+        return name;
     }
 
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public int getTuoi() {
-        return tuoi;
-    }
-
-    public void setTuoi(int tuoi) {
-        this.tuoi = tuoi;
     }
 }
