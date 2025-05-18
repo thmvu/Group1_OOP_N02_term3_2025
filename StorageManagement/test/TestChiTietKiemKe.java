@@ -1,15 +1,15 @@
 public class TestChiTietKiemKe {
     public static void main(String[] args) {
-        // Tao doi tuong ThietBi
-        ThietBi tb1 = new ThietBi("TB001", "May tinh xach tay");
-        ThietBi tb2 = new ThietBi("TB002", "May in");
+        // Tạo đối tượng ThietBi
+        ThietBi tb1 = new ThietBi("TB001", "Máy tính xách tay");
+        ThietBi tb2 = new ThietBi("TB002", "Máy in");
 
-        // Tao doi tuong ChiTietKiemKe
-        ChiTietKiemKe ctk1 = new ChiTietKiemKe(tb1, "Hoat dong binh thuong");
-        ChiTietKiemKe ctk2 = new ChiTietKiemKe(tb2, "Can bao tri");
+        // Tạo đối tượng ChiTietKiemKe
+        ChiTietKiemKe ctk1 = new ChiTietKiemKe(tb1, "Tốt");
+        ChiTietKiemKe ctk2 = new ChiTietKiemKe(tb2, "Hư hỏng");
 
-        // In thong tin
-        System.out.println(ctk1);
-        System.out.println(ctk2);
+        // In thông tin
+        System.out.println("Chi tiết kiểm kê 1: " + ctk1.getThietBi().getMaThietBi() + " - " + ctk1.getThietBi().getTenThietBi() + " - " + ctk1.getTinhTrangSauKiemKe());
+        System.out.println("Chi tiết kiểm kê 2: " + ctk2.getThietBi().getMaThietBi() + " - " + ctk2.getThietBi().getTenThietBi() + " - " + ctk2.getTinhTrangSauKiemKe());
     }
 }
