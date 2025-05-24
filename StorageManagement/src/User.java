@@ -1,7 +1,7 @@
 
 public class User 
 {
-    private String userId; //private -> tính đóng gói 
+    private String userId; 
     private String name;
     private String gender;
     private String birthDate;

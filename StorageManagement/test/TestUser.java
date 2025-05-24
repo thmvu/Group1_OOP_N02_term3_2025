@@ -63,12 +63,12 @@ public class TestUser
 
         // cap nhat thong tin
 
-        System.out.println("Enter User ID");
+        System.out.println("Nhap User ID");
         Scanner userId = new Scanner(System.in);
 
         String s = userId.nextLine();
 
-        System.out.println("Enter User fullname");
+        System.out.println("Nhap User fullname");
 
         Scanner name = new Scanner(System.in); // Create a Scanner object
 
