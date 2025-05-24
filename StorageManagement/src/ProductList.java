@@ -13,7 +13,7 @@ public class ProductList {
     public ArrayList<Product> getEditProduct(int productId, String productName){
         for(int i =0; i < pr.size(); i++){
 
-            if(pr.get(i).getProductId == productId){
+            if(pr.get(i).getProductId() == productId){
                 System.out.print("true");
                 pr.get(i).setProductName(productName);
             }
@@ -22,7 +22,7 @@ public class ProductList {
     }
     public ArrayList<Product> getDeleteProduct(int producId){
         for(int i = 0; i < pr.size(); i++){
-            if(pr.get(i).getProductId == producId){
+            if(pr.get(i).getProductId() == producId){
                 pr.remove(i);
             }
         }
