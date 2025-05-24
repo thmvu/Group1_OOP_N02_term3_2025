@@ -1,21 +1,21 @@
 import java.io.*;
-import java.util.*;
+import java.util.List;
 
 public class DataIO1 {
-    public static void writeToFile(String filename, List<?> data) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
-            oos.writeObject(new ArrayList<>(data));
+    public static void writeToFile(String filename, List<?> list) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
+            out.writeObject(list);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static List<?> readFromFile(String filename) {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
-            return (List<?>) ois.readObject();
+    public static Object readFromFile(String filename) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))) {
+            return in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            return Collections.emptyList();
+            return null;
         }
     }
 }

@@ -7,16 +7,11 @@ public class Warehouse1 {
         this.location = location;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getLocation() {
-        return location;
-    }
+    public int getId() { return id; }
+    public String getLocation() { return location; }
 
     @Override
     public String toString() {
-        return id + " - " + location;
+        return "Warehouse1{id=" + id + ", location='" + location + "'}";
     }
 }

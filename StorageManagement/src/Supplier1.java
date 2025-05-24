@@ -7,16 +7,11 @@ public class Supplier1 {
         this.name = name;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
+    public int getId() { return id; }
+    public String getName() { return name; }
 
     @Override
     public String toString() {
-        return id + " - " + name;
+        return "Supplier1{id=" + id + ", name='" + name + "'}";
     }
 }

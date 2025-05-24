@@ -24,18 +24,5 @@ public class TestApp1 {
 
         System.out.println("\nDanh sách nhà cung cấp:");
         manager.printSuppliers();
-
-        DataIO1.writeToFile("products1.dat", manager.productList.getProducts());
-        DataIO1.writeToFile("warehouses1.dat", manager.warehouseList.getWarehouses());
-        DataIO1.writeToFile("suppliers1.dat", manager.supplierList.getSuppliers());
-
-        var productsFromFile = DataIO1.readFromFile("products1.dat");
-        var warehousesFromFile = DataIO1.readFromFile("warehouses1.dat");
-        var suppliersFromFile = DataIO1.readFromFile("suppliers1.dat");
-
-        System.out.println("\nĐọc dữ liệu từ file:");
-        System.out.println("Products: " + productsFromFile);
-        System.out.println("Warehouses: " + warehousesFromFile);
-        System.out.println("Suppliers: " + suppliersFromFile);
     }
 }
