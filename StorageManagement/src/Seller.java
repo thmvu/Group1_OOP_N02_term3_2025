@@ -1,13 +1,10 @@
-public class Seller extends User 
-{
-    public Seller(String userId, String name, String gender, String birthDate, String phoneNumber, 
-            String email, String address, String password) 
-    {
-        super(userId, name, gender, birthDate, phoneNumber, email, address, password, "Nhà cung cấp");
+// Seller.java
+public class Seller extends User {
+    public Seller(String userID, String fullName, String gender, String dob, String phone, String email, String address, String password) {
+        super(userID, fullName, gender, dob, phone, email, address, password, "Nha cung cap");
     }
 
-    public void sell(String productName)        //bán sản phẩm
-    {
-        System.out.println(getName() + " đã đăng bán sản phẩm: " + productName);
+    public void sell(String productName) {
+        System.out.println(getFullName() + " da ban san pham: " + productName);
     }
 }

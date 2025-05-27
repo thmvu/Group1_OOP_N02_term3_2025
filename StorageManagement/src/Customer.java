@@ -1,13 +1,10 @@
-public class Customer extends User         //tính kế thừa 
-{
-    public Customer(String userId, String name, String gender, String birthDate, String phoneNumber, 
-            String email, String address, String password) 
-    {
-        super(userId, name, gender, birthDate, phoneNumber, email, address, password, "Khách hàng");
+// Customer.java
+public class Customer extends User {
+    public Customer(String userID, String fullName, String gender, String dob, String phone, String email, String address, String password) {
+        super(userID, fullName, gender, dob, phone, email, address, password, "Khach hang");
     }
 
-    public void buy(String productName)     //mua sản phẩm
-    {
-        System.out.println(getName() + " đã mua sản phẩm: " + productName);
+    public void buy(String productName) {
+        System.out.println(getFullName() + " da mua san pham: " + productName);
     }
 }

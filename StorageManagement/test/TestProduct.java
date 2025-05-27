@@ -2,63 +2,129 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class TestProduct {
+    static ArrayList<Product> danhSachSanPham = new ArrayList<>();
+    static Scanner scanner = new Scanner(System.in);
 
-    public static void test() {
-        // Tạo một sản phẩm mới
-        Product product1 = new Product(101, 5001, "Ao Hoodie", 250000, 100, "Ao hoodie mau den, chat lieu cotton.");
-        product1.displayProductInfo();
-        product1.updateStock(20); // Giả sử bán 20 chiếc
-        product1.displayProductInfo();
+    public static void hienThiDanhSach() {
+        System.out.println("\n--- DANH SACH SAN PHAM ---");
+        for (Product sp : danhSachSanPham) {
+            sp.displayProductInfo();
+            System.out.println("---------------------------");
+        }
     }
 
-    public ArrayList<Product> addList() {
-        ArrayList<Product> pr = new ArrayList<Product>();
+    public static void themSanPham() {
+        System.out.print("Nhap ma san pham: ");
+        int productId = scanner.nextInt(); scanner.nextLine();
 
-        Product pr_1 = new Product(1, 5001, "Ao Am", 150000, 20, "Ao am mua dong");
-        Product pr_2 = new Product(2, 5002, "Quan Jean", 250000, 15, "Quan jean xanh");
-        Product pr_3 = new Product(3, 5003, "Giay Da", 500000, 10, "Giay da den");
+        System.out.print("Nhap ma nguoi ban: ");
+        int sellerId = scanner.nextInt(); scanner.nextLine();
 
-        pr.add(pr_1);
-        pr.add(pr_2);
-        pr.add(pr_3);
+        System.out.print("Nhap ten san pham: ");
+        String productName = scanner.nextLine();
 
-        return pr;
+        System.out.print("Nhap gia san pham: ");
+        double price = scanner.nextDouble(); scanner.nextLine();
+
+        System.out.print("Nhap so luong ton kho: ");
+        int stock = scanner.nextInt(); scanner.nextLine();
+
+        System.out.print("Nhap mo ta san pham: ");
+        String description = scanner.nextLine();
+
+        Product sp = new Product(productId, sellerId, productName, price, stock, description);
+        danhSachSanPham.add(sp);
+        System.out.println("Da them san pham thanh cong!");
     }
 
-    public void testEditDelete() {
-        Product pr_1 = new Product(1, 5001, "Ao Am", 150000, 20, "Ao am mua dong");
-        Product pr_2 = new Product(2, 5002, "Quan Jean", 250000, 15, "Quan jean xanh");
-        Product pr_3 = new Product(3, 5003, "Giay Da", 500000, 10, "Giay da den");
+    public static void suaSanPham() {
+        System.out.print("Nhap ma san pham can sua: ");
+        int productId = scanner.nextInt(); scanner.nextLine();
 
-        ProductList proList = new ProductList();
-        proList.addProduct(pr_1);
-        proList.addProduct(pr_2);
-        proList.addProduct(pr_3);
+        for (Product sp : danhSachSanPham) {
+            if (sp.getProductId() == productId) {
+                System.out.print("Nhap ten moi: ");
+                String name = scanner.nextLine();
 
-        Scanner sc = new Scanner(System.in);
+                System.out.print("Nhap gia moi: ");
+                double price = scanner.nextDouble(); scanner.nextLine();
 
-        System.out.println("Nhap ID san pham can sua: ");
-        int idEdit = sc.nextInt();
-        sc.nextLine(); // clear buffer
+                System.out.print("Nhap so luong moi: ");
+                int stock = scanner.nextInt(); scanner.nextLine();
 
-        System.out.println("Nhap ten moi cho san pham: ");
-        String newName = sc.nextLine();
+                System.out.print("Nhap mo ta moi: ");
+                String desc = scanner.nextLine();
 
-        proList.getEditProduct(newName, idEdit);
-        proList.printProductList();
+                sp.setProductName(name);
+                sp.setPrice(price);
+                sp.setStock(stock);
+                sp.setDescription(desc);
 
-        System.out.println("Nhap ID san pham can xoa: ");
-        int idDelete = sc.nextInt();
+                System.out.println("Cap nhat san pham thanh cong.");
+                return;
+            }
+        }
 
-        proList.getDeleteProduct(idDelete);
-        System.out.println("Danh sach sau khi xoa:");
-        proList.printProductList();
-
-        sc.close();
+        System.out.println("Khong tim thay san pham voi ma da nhap.");
     }
 
-    public void testDelete(ProductList proList, int productId) {
-        proList.getDeleteProduct(productId);
-        proList.printProductList();
+    public static void xoaSanPham() {
+        System.out.print("Nhap ma san pham can xoa: ");
+        int productId = scanner.nextInt(); scanner.nextLine();
+
+        for (int i = 0; i < danhSachSanPham.size(); i++) {
+            if (danhSachSanPham.get(i).getProductId() == productId) {
+                danhSachSanPham.remove(i);
+                System.out.println("Da xoa san pham.");
+                return;
+            }
+        }
+
+        System.out.println("Khong tim thay san pham de xoa.");
+    }
+
+    public static void banSanPham() {
+        System.out.print("Nhap ma san pham can ban: ");
+        int productId = scanner.nextInt(); scanner.nextLine();
+
+        for (Product sp : danhSachSanPham) {
+            if (sp.getProductId() == productId) {
+                System.out.print("Nhap so luong muon ban: ");
+                int quantity = scanner.nextInt(); scanner.nextLine();
+                sp.updateStock(quantity);
+                return;
+            }
+        }
+
+        System.out.println("Khong tim thay san pham can ban.");
+    }
+
+    public static void test(){
+        // San pham mau
+        danhSachSanPham.add(new Product(1, 100, "Laptop Dell", 15000000, 10, "Laptop van phong"));
+        danhSachSanPham.add(new Product(2, 101, "Chuot Logitech", 500000, 25, "Chuot khong day"));
+
+        int luaChon;
+        do {
+            System.out.println("\n===== MENU QUAN LY SAN PHAM =====");
+            System.out.println("1. Hien thi danh sach san pham");
+            System.out.println("2. Them san pham");
+            System.out.println("3. Sua san pham");
+            System.out.println("4. Xoa san pham");
+            System.out.println("5. Ban san pham (giam ton kho)");
+            System.out.println("6. Thoat");
+            System.out.print("Chon chuc nang: ");
+            luaChon = scanner.nextInt(); scanner.nextLine();
+
+            switch (luaChon) {
+                case 1: hienThiDanhSach(); break;
+                case 2: themSanPham(); break;
+                case 3: suaSanPham(); break;
+                case 4: xoaSanPham(); break;
+                case 5: banSanPham(); break;
+                case 6: System.out.println("Tam biet!"); break;
+                default: System.out.println("Lua chon khong hop le!");
+            }
+        } while (luaChon != 6);
     }
 }
