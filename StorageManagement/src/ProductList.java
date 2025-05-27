@@ -1,45 +1,34 @@
 import java.util.ArrayList;
 
 public class ProductList {
+    private ArrayList<Product> products = new ArrayList<>();
 
-    ArrayList<Product> products = new ArrayList<>();
-
-    // Thêm sản phẩm, trả về danh sách
-    public ArrayList<Product> addProduct(Product p) {
+    public void addProduct(Product p) {
         products.add(p);
-        return products;
     }
 
-    // Sửa sản phẩm theo productId, trả về danh sách
-    public ArrayList<Product> getEditProduct(int productId, String newName, int newQuantity) {
-        for (int i = 0; i < products.size(); i++) {
-            if (products.get(i).productId == productId) {
-                System.out.print("true\n");  // báo đã tìm thấy sản phẩm để sửa
-                products.get(i).productName = newName;
-                products.get(i).quantity = newQuantity;
-            }
-        }
-        return products;
-    }
-
-    // Xóa sản phẩm theo productId, trả về danh sách
-    public ArrayList<Product> getDeleteProduct(int productId) {
-        for (int i = 0; i < products.size(); i++) {
-            if (products.get(i).productId == productId) {
-                products.remove(i);
-                break; // xóa rồi dừng vòng lặp để tránh lỗi
-            }
-        }
-        return products;
-    }
-
-    // In danh sách sản phẩm
     public void printProductList() {
-        int len = products.size();
-        for (int i = 0; i < len; i++) {
-            System.out.println("Product ID: " + products.get(i).productId +
-                               ", Name: " + products.get(i).productName +
-                               ", Quantity: " + products.get(i).quantity);
+        for (Product p : products) {
+            System.out.println(p);
         }
+    }
+
+    public void getEditProduct(int id, String newName, int newQty, double newPrice, String newOrigin, String newColorType) {
+        for (Product p : products) {
+            if (p.getId() == id) {
+                p.setName(newName);
+                p.setQuantity(newQty);
+                p.setPrice(newPrice);
+                p.setOrigin(newOrigin);
+                p.setColorType(newColorType);
+                System.out.println("Đã sửa thành công.");
+                return;
+            }
+        }
+        System.out.println("Không tìm thấy sản phẩm với ID: " + id);
+    }
+
+    public void getDeleteProduct(int id) {
+        products.removeIf(p -> p.getId() == id);
     }
 }
