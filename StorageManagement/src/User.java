@@ -1,72 +1,75 @@
-
-public class User 
-{
-    private String userId; 
-    private String name;
+// User.java
+public class User {
+    private String userID;
+    private String fullName;
     private String gender;
-    private String birthDate;
-    private String phoneNumber;
+    private String dob;
+    private String phone;
     private String email;
     private String address;
     private String password;
-    private String userType;
+    private String role;
 
-    public User(String userId, String name, String gender, String birthDate, String phoneNumber, 
-            String email, String address, String password, String userType)
-    {
-        this.userId = userId;
-        this.name = name;
+    public User(String userID, String fullName, String gender, String dob, String phone, String email, String address, String password, String role) {
+        this.userID = userID;
+        this.fullName = fullName;
         this.gender = gender;
-        this.birthDate = birthDate;
-        this.phoneNumber = phoneNumber;
+        this.dob = dob;
+        this.phone = phone;
         this.email = email;
         this.address = address;
         this.password = password;
-        this.userType = userType;
+        this.role = role;
     }
 
-    public String getUserId() { return userId; }
-    public String getName() { return name; }
+    // Getters & Setters
+    public String getUserID() { return userID; }
+    public void setUserID(String userID) { this.userID = userID; }
+
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+
     public String getGender() { return gender; }
-    public String getBirthDate() { return birthDate; }
-    public String getPhoneNumber() { return phoneNumber; }
+    public void setGender(String gender) { this.gender = gender; }
+
+    public String getDob() { return dob; }
+    public void setDob(String dob) { this.dob = dob; }
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
     public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
     public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
     public String getPassword() { return password; }
-    public String getUserType() { return userType; }
-    public void setName(String name)
-    {
-        this.name = name;
+    public void setPassword(String password) { this.password = password; }
 
-    } 
-    public void setUser(String userId, String name, String gender, String birthDate, String phoneNumber, 
-                            String email, String address, String password, String userType) 
-    { 
-        this.userId = userId;
-        this.name = name;
-        this.gender = gender;
-        this.birthDate = birthDate;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.address = address;
-        this.password = password;
-        this.userType = userType; 
-    }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 
-    public boolean login(String loginId, String password)        //đăng nhập
-    {
-        return (loginId.equals(this.phoneNumber) || loginId.equals(this.email)) && password.equals(this.password);
-    }
-
-    public void showUser()          //hiển thị thông tin user
-    {
-        System.out.println("Mã người dùng: " + userId);
-        System.out.println("Tên: " + name);
-        System.out.println("Giới tính: " + gender);
-        System.out.println("Ngày sinh: " + birthDate);
-        System.out.println("SĐT: " + phoneNumber);
+    // Phương thức hiển thị thông tin người dùng
+    public void showUser() {
+        System.out.println("ID: " + userID);
+        System.out.println("Ten: " + fullName);
+        System.out.println("Gioi tinh: " + gender);
+        System.out.println("Ngay sinh: " + dob);
+        System.out.println("Dien thoai: " + phone);
         System.out.println("Email: " + email);
-        System.out.println("Địa chỉ: " + address);
-        System.out.println("Loại người dùng: " + userType);
+        System.out.println("Dia chi: " + address);
+        System.out.println("Vai tro: " + role);
+    }
+
+    // Kiểm tra đăng nhập đơn giản
+    public boolean login(String username, String password) {
+        // username co the la phone hoac email
+        return (username.equals(phone) || username.equals(email)) && this.password.equals(password);
+    }
+    
+    @Override
+    public String toString() {
+        return "User[ID=" + userID + ", Ten=" + fullName + ", VaiTro=" + role + "]";
     }
 }

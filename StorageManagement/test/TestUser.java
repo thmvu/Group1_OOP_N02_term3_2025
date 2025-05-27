@@ -1,89 +1,81 @@
-import java.util.ArrayList;
+// TestUser.java
 import java.util.Scanner;
 
-public class TestUser 
-{
-    public static void test() 
-    {
-        Customer customer_1 = new Customer("KH001", "Nguyễn Văn A", "Nam", "2005-12-16", 
-                                        "0901239303", "a@gmail.com", "Hà Nội", "123456");
-        Seller seller_1 = new Seller("NC001", "Nguyen Thi TinhTinh", "Nữ", "2005-01-01", 
-                                        "0912345678", "b@gmail.com", "Hồ Chí Minh", "abcdef");
-        
-        System.out.println("== Thông tin Khách hàng ==");
-        customer_1.showUser();
-        System.out.println("\n== Thông tin Nhà cung cấp ==");
-        seller_1.showUser();
-
-        System.out.println("\n== Kiểm tra đăng nhập ==");
-        System.out.println("Customer login (số điện thoại): " + customer_1.login("0901239303", "123456"));
-        System.out.println("Seller login (email): " + seller_1.login("b@gmail.com", "abc123"));
-
-        System.out.println("\n== Giao dịch ==");
-        customer_1.buy("Laptop Dell");
-        seller_1.sell("Tai nghe Sony");
-
-    }
-
-
-    ArrayList<User> sl = new ArrayList<User>();
-
-    public ArrayList<User> addList(){
-        User s1 = new User("KH001", "Nguyễn Văn An", "Nam", "2005-12-16", "0901239303",
-                                      "a@gmail.com", "Hà Nội", "123456", "Khách hàng");
-        User s2 = new User("KH002", "Nguyễn Duy Bảo", "Nam", "2005-04-04", "0945983647",
-                                      "b@gmail.com", "TP.HCM", "123456", "Khách hàng");
-        User s3 = new User("NC001", "Nguyễn Thị Lan Anh", "Nữ", "2005-04-09", "0945989814",
-                                      "c@gmail.com", "Đăk Lăk", "123456", "Nhà cung cấp");
-        sl.add(s1);
-        sl.add(s2);
-        sl.add(s3);
-        return sl;
-    }
-
-    public void testEdit() 
-    {
-        System.out.println("\n\n\n== Lecture 4 ==");
-
-        ArrayList<User> sl = new ArrayList<User>();
-        User s1 = new User("KH001", "Nguyễn Văn An", "Nam", "2005-12-16", "0901239303",
-                                      "a@gmail.com", "Hà Nội", "123456", "Khách hàng");
-        User s2 = new User("KH002", "Nguyễn Duy Bảo", "Nam", "2005-04-04", "0945983647",
-                                      "b@gmail.com", "TP.HCM", "123456", "Khách hàng");
-        User s3 = new User("NC001", "Nguyễn Thị Lan Anh", "Nữ", "2005-04-09", "0945989814",
-                                      "c@gmail.com", "Đăk Lăk", "123456", "Nhà cung cấp");
-        sl.add(s1);
-        sl.add(s2);
-        sl.add(s3);
-
+public class TestUser {
+    public static void test() {
         UserList userList = new UserList();
-        userList.addUser(s1);
-        userList.addUser(s2);
-        userList.addUser(s3);
 
-        // cap nhat thong tin
+        // Them user mau
+        userList.addUser(new Customer("KH001", "Nguyen Van An", "Nam", "2005-12-16", "0901239303", "a@gmail.com", "Ha Noi", "123456"));
+        userList.addUser(new Customer("KH002", "Nguyen Duy Bao", "Nam", "2005-04-04", "0945983647", "b@gmail.com", "TP.HCM", "123456"));
+        userList.addUser(new Seller("NC001", "Nguyen Thi Lan Anh", "Nu", "2005-04-09", "0945989814", "c@gmail.com", "Dak Lak", "123456"));
 
-        System.out.println("Nhap User ID");
-        Scanner userId = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
+        int choice;
 
-        String s = userId.nextLine();
+        do {
+            System.out.println("\n===== MENU QUAN LY USER =====");
+            System.out.println("1. Hien thi danh sach user");
+            System.out.println("2. Them user moi");
+            System.out.println("3. Sua ten user");
+            System.out.println("4. Xoa user");
+            System.out.println("5. Thoat");
+            System.out.print("Chon chuc nang: ");
+            choice = scanner.nextInt();
+            scanner.nextLine(); // consume newline
 
-        System.out.println("Nhap User fullname");
+            switch(choice) {
+                case 1:
+                    userList.printUserList();
+                    break;
+                case 2:
+                    System.out.print("Nhap ID user: ");
+                    String id = scanner.nextLine();
+                    System.out.print("Nhap ten: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Nhap gioi tinh: ");
+                    String gender = scanner.nextLine();
+                    System.out.print("Nhap ngay sinh: ");
+                    String dob = scanner.nextLine();
+                    System.out.print("Nhap so dien thoai: ");
+                    String phone = scanner.nextLine();
+                    System.out.print("Nhap email: ");
+                    String email = scanner.nextLine();
+                    System.out.print("Nhap dia chi: ");
+                    String address = scanner.nextLine();
+                    System.out.print("Nhap mat khau: ");
+                    String pass = scanner.nextLine();
+                    System.out.print("Nhap vai tro (Khach hang / Nha cung cap): ");
+                    String role = scanner.nextLine();
 
-        Scanner name = new Scanner(System.in); // Create a Scanner object
+                    if(role.equalsIgnoreCase("Khach hang")) {
+                        userList.addUser(new Customer(id, name, gender, dob, phone, email, address, pass));
+                    } else if(role.equalsIgnoreCase("Nha cung cap")) {
+                        userList.addUser(new Seller(id, name, gender, dob, phone, email, address, pass));
+                    } else {
+                        System.out.println("Vai tro khong hop le, them that bai!");
+                    }
+                    break;
+                case 3:
+                    System.out.print("Nhap ID user can sua: ");
+                    String idSua = scanner.nextLine();
+                    System.out.print("Nhap ten moi: ");
+                    String tenMoi = scanner.nextLine();
+                    userList.getEditUser(tenMoi, idSua);
+                    break;
+                case 4:
+                    System.out.print("Nhap ID user can xoa: ");
+                    String idXoa = scanner.nextLine();
+                    userList.getDeleteUser(idXoa);
+                    break;
+                case 5:
+                    System.out.println("Tam biet!");
+                    break;
+                default:
+                    System.out.println("Lua chon khong hop le!");
+            }
+        } while(choice != 5);
 
-        String newName = name.nextLine();
-
-        userList.getEditUser(newName, s);
-
-        userList.printUserList();
-        
-    }
-
-    public void testDelete(UserList userList, String UserID)
-    {
-        userList.getDeleteUser(UserID);
-        userList.printUserList();
-
+        scanner.close();
     }
 }

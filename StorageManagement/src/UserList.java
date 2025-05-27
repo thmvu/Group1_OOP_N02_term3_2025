@@ -1,55 +1,43 @@
-
+// UserList.java
 import java.util.ArrayList;
 
 public class UserList {
+    private ArrayList<User> users = new ArrayList<>();
 
-    ArrayList<User> st = new ArrayList<User>();
-
-    public ArrayList<User> addUser(User stu) {
-
-        st.add(stu);
-        return st;
-
+    public void addUser(User u) {
+        users.add(u);
+        System.out.println("Da them user: " + u.getUserID());
     }
 
-    public ArrayList<User> getEditUser(String name, String userId) {
-
-        for (int i = 0; i < st.size(); i++) {
-
-            if (st.get(i).getUserId() == userId) {
-
-                System.out.print("true");
-
-                st.get(i).setName(name);
+    public boolean getEditUser(String newName, String userId) {
+        for (User u : users) {
+            if (u.getUserID().equals(userId)) {
+                u.setFullName(newName);
+                System.out.println("Da cap nhat ten user " + userId + " thanh: " + newName);
+                return true;
             }
-
         }
-
-        return st;
+        System.out.println("Khong tim thay user de sua.");
+        return false;
     }
 
-    public ArrayList<User> getDeleteUser(String userId) {
-
-        for (int i = 0; i < st.size(); i++) {
-
-            if (st.get(i).getUserId() == userId) {
-
-                st.remove(i);
-
+    public boolean getDeleteUser(String userId) {
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getUserID().equals(userId)) {
+                users.remove(i);
+                System.out.println("Da xoa user co ID: " + userId);
+                return true;
             }
-
         }
-
-        return st;
+        System.out.println("Khong tim thay user de xoa.");
+        return false;
     }
 
     public void printUserList() {
-        int len = st.size();
-
-        for (int i = 0; i < len; i++) {
-            System.out.println("User ID: " + st.get(i).getUserId() + " Fullname: " + st.get(i).getName());
-
+        System.out.println("----- Danh sach user -----");
+        for (User u : users) {
+            System.out.println(u);
         }
-
+        System.out.println("-------------------------");
     }
 }
