@@ -2,7 +2,7 @@
 import java.util.Scanner;
 
 public class TestUser {
-    public static void test() {
+    public static void testUser() {
         UserList userList = new UserList();
 
         // Them user mau

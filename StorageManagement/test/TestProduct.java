@@ -99,7 +99,7 @@ public class TestProduct {
         System.out.println("Khong tim thay san pham can ban.");
     }
 
-    public static void test(){
+    public static void testProduct(){
         // San pham mau
         danhSachSanPham.add(new Product(1, 100, "Laptop Dell", 15000000, 10, "Laptop van phong"));
         danhSachSanPham.add(new Product(2, 101, "Chuot Logitech", 500000, 25, "Chuot khong day"));
