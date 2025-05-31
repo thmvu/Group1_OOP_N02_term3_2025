@@ -86,4 +86,7 @@ class thietbi_nguoidung{
 
 
 ```
-
+tuong tac giua cac class 
+vd top cac san pham(product) ma duoc khach hang ua chuong 
+   seller ban duoc nhieu nhat trong tuan 
+   
