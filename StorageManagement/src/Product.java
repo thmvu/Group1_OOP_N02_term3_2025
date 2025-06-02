@@ -19,6 +19,14 @@ public class Product {
         this.description = description;
     }
 
+    public Product(int productId) {
+        this.productId = productId;
+        this.sellerId = 0;
+        this.productName = "Chưa xác định";
+        this.price = 0.0;
+        this.stock = 0;
+        this.description = "Không có mô tả";
+    }
     // Getter và Setter cho các thuộc tính
 
     public int getProductId() { return productId; }
