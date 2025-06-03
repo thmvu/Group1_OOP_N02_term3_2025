@@ -1,6 +1,8 @@
+
+
 public class Main {
     public static void main(String[] args) {
-       
-        TestUI.testAll();
+       TestSequence.test();
+       // TestUI.testAll();
     }
 }
