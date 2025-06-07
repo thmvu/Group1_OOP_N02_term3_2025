@@ -85,8 +85,10 @@ class thietbi_nguoidung{
 
 
 ```
-![Sequence Diagram](Digagram.png)
-![Sequence Diagram](Sequence_Diagram.png)
-![Sequence Diagram](Activity_Diagram.png)
+
+
+![Sequence Diagram](image/Digagram.PNG)
+![Sequence Diagram](image/Sequence_Diagram.png)
+![Sequence Diagram](image/Activity_Diagram.png)
 
 
