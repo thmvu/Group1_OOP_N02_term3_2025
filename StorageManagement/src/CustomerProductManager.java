@@ -36,16 +36,29 @@ public class CustomerProductManager {
         }
     }
 
+    public List<Customer_Product> filterByKeyword(String keyword) {
+        List<Customer_Product> filteredList = new ArrayList<>();
+        for (Customer_Product cp : customerProductList) {
+            if (cp.getCustomer().getUserID().toLowerCase().contains(keyword.toLowerCase())
+                    || String.valueOf(cp.getProduct().getProductId()).contains(keyword)) {
+                filteredList.add(cp);
+            }
+        }
+        return filteredList;
+    }
+
     public void reportMostPopularProduct() {
         if (customerProductList.isEmpty()) {
             System.out.println("Chua co giao dich nao.");
             return;
         }
+
         Map<Integer, Integer> productCount = new HashMap<>();
         for (Customer_Product cp : customerProductList) {
             int pid = cp.getProduct().getProductId();
             productCount.put(pid, productCount.getOrDefault(pid, 0) + 1);
         }
+
         int max = Collections.max(productCount.values());
         System.out.println("=== San pham duoc mua nhieu nhat ===");
         for (Map.Entry<Integer, Integer> entry : productCount.entrySet()) {

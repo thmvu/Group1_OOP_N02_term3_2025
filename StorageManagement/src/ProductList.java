@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProductList {
 
@@ -20,6 +22,7 @@ public class ProductList {
         }  
         return pr;  
     }
+    // xoa san pham theo ID
     public ArrayList<Product> getDeleteProduct(int producId){
         for(int i = 0; i < pr.size(); i++){
             if(pr.get(i).getProductId() == producId){
@@ -29,11 +32,16 @@ public class ProductList {
         return pr;
     }
     public void printProductList(){
-        int len = pr.size();
-
-        for(int i = 0; i < len; i++){
-            System.out.println("Product ID: " + pr.get(i).getProductId() + " Product Name: " + pr.get(i).getProductName());
+        for(Product p : pr){
+            System.out.println("Product ID: " + p.getProductId() + ", Product Name: " + p.getProductName() + ", Product Price: " + p.getProductPrice());
         }
+    }
+    public Product getProductInfo(int productId){
+        List<Product> filteredProducts = pr.stream()
+                .filter(product -> product.getProductId() == productId)
+                .collect(Collectors.toList());
+        if (filteredProducts.isEmpty()) return null;
+        return filteredProducts.get(0);
     }
 
 }
