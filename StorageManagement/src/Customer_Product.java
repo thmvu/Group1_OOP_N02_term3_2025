@@ -15,4 +15,9 @@ public class Customer_Product {
     public Customer getCustomer() { return customer; }
     public Product getProduct() { return product; }
     public Date getDate() { return date; }
+    @Override
+public String toString() {
+    return "Customer ID: " + getCustomer().getUserID() + ", Product ID: " + getProduct().getProductId() + ", Date: " + getDate();
+}
+
 }
