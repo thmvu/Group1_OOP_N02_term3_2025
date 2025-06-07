@@ -40,4 +40,14 @@ public class UserList {
         }
         System.out.println("-------------------------");
     }
+
+    public ArrayList<User> searchUsername(String userID){
+        ArrayList<User> newList = new ArrayList<>();
+        for (User u : users){
+            if (u.getUserID().contains(userID)) {
+                newList.add(u);
+            }
+        }
+        return newList;
+    }
 }
