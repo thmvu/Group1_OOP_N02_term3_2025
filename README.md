@@ -1,14 +1,13 @@
 ## HỆ THỐNG QUẢN LÝ KHO HÀNG 
 
 # Giới thiệu 
-Quản lí hệ thống kho hàng nhằm tránh thất thoát cũng như để quản lý chặt chẽ
+Xây dụng ứng dụng : Quản Lý Kho Hàng (Storage Management)
 
 ## Thành viên
 Từ Hữu Minh Vũ 
 Nguyễn Hữu Tình
 Vũ Viết Tuấn
-# Mô tả Đối tượng Quản lý thiết bị
-
+# Đối tượng Quản Lý Kho Hàng
 ## Mô tả
 
 ```
@@ -86,7 +85,10 @@ class thietbi_nguoidung{
 
 
 ```
-tuong tac giua cac class 
-vd top cac san pham(product) ma duoc khach hang ua chuong 
-   seller ban duoc nhieu nhat trong tuan 
-   
+
+
+![Sequence Diagram](image/Digagram.PNG)
+![Sequence Diagram](image/Sequence_Diagram.png)
+![Sequence Diagram](image/Activity_Diagram.png)
+
+
