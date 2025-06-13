@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+
 public class ProductList {
     private static ProductList instance;
     private ArrayList<Product> productList;
@@ -18,7 +19,9 @@ public class ProductList {
 
     // Thêm sản phẩm
     public void addProduct(Product product) {
-        productList.add(product);
+        if (product != null) {
+            productList.add(product);
+        }
     }
 
     // Lấy danh sách sản phẩm
@@ -56,14 +59,36 @@ public class ProductList {
 
     // Lấy thông tin 1 sản phẩm theo ID
     public Product getProductInfo(int productId) {
-        for (Product p : productList) {
-            if (p.getProductId() == productId) return p;
-        }
-        return null;
+        return productList.stream()
+                .filter(p -> p.getProductId() == productId)
+                .findFirst()
+                .orElse(null);
     }
 
     // Kiểm tra sản phẩm có tồn tại
     public boolean isProductExist(int productId) {
         return productList.stream().anyMatch(p -> p.getProductId() == productId);
+    }
+
+    // Tìm sản phẩm theo tên gần đúng (không phân biệt hoa thường)
+    public ArrayList<Product> searchProductByName(String keyword) {
+        ArrayList<Product> result = new ArrayList<>();
+        for (Product p : productList) {
+            if (p.getProductName().toLowerCase().contains(keyword.toLowerCase())) {
+                result.add(p);
+            }
+        }
+        return result;
+    }
+
+    // Lọc sản phẩm theo sellerId
+    public ArrayList<Product> getProductsBySeller(int sellerId) {
+        ArrayList<Product> result = new ArrayList<>();
+        for (Product p : productList) {
+            if (p.getSellerId() == sellerId) {
+                result.add(p);
+            }
+        }
+        return result;
     }
 }
