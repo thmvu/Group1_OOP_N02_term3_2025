@@ -102,6 +102,6 @@ public class TestUser {
             }
         } while(choice != 5);
 
-        scanner.close();
+        
     }
 }

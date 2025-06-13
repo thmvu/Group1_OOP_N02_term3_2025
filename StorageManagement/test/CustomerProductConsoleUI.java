@@ -40,7 +40,6 @@ public class CustomerProductConsoleUI {
                 case 6 -> timKiemGiaoDich();
                 case 0 -> {
                     System.out.println("Ket thuc chuong trinh.");
-                    scanner.close();
                 }
                 default -> System.out.println("Lua chon khong hop le.");
             }
