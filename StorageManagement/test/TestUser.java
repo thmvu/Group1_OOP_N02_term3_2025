@@ -1,9 +1,8 @@
-// TestUser.java
 import java.util.Scanner;
 
 public class TestUser {
     public static void testUser() {
-        UserList userList = new UserList();
+        UserList userList = UserList.getInstance();
 
         // Them user mau
         userList.addUser(new Customer("KH001", "Nguyen Van An", "Nam", "2005-12-16", "0901239303", "a@gmail.com", "Ha Noi", "123456"));
@@ -31,6 +30,13 @@ public class TestUser {
                 case 2:
                     System.out.print("Nhap ID user: ");
                     String id = scanner.nextLine();
+
+                    // Kiểm tra ID trùng
+                    if (userList.getCustomerInfo(id) != null) {
+                        System.out.println("ID da ton tai. Vui long thu lai!");
+                        break;
+                    }
+
                     System.out.print("Nhap ten: ");
                     String name = scanner.nextLine();
                     System.out.print("Nhap gioi tinh: ");
@@ -45,28 +51,48 @@ public class TestUser {
                     String address = scanner.nextLine();
                     System.out.print("Nhap mat khau: ");
                     String pass = scanner.nextLine();
-                    System.out.print("Nhap vai tro (Khach hang / Nha cung cap): ");
-                    String role = scanner.nextLine();
 
-                    if(role.equalsIgnoreCase("Khach hang")) {
+                    System.out.println("Chon vai tro:");
+                    System.out.println("1. Khach hang");
+                    System.out.println("2. Nha cung cap");
+                    System.out.print("Nhap lua chon: ");
+                    int roleChoice = scanner.nextInt(); scanner.nextLine();
+
+                    if (roleChoice == 1) {
                         userList.addUser(new Customer(id, name, gender, dob, phone, email, address, pass));
-                    } else if(role.equalsIgnoreCase("Nha cung cap")) {
+                        System.out.println("Them khach hang thanh cong.");
+                    } else if (roleChoice == 2) {
                         userList.addUser(new Seller(id, name, gender, dob, phone, email, address, pass));
+                        System.out.println("Them nha cung cap thanh cong.");
                     } else {
-                        System.out.println("Vai tro khong hop le, them that bai!");
+                        System.out.println("Lua chon khong hop le, them that bai!");
                     }
                     break;
                 case 3:
                     System.out.print("Nhap ID user can sua: ");
                     String idSua = scanner.nextLine();
+
+                    if (userList.getCustomerInfo(idSua) == null) {
+                        System.out.println("Khong tim thay user co ID nay.");
+                        break;
+                    }
+
                     System.out.print("Nhap ten moi: ");
                     String tenMoi = scanner.nextLine();
                     userList.getEditUser(tenMoi, idSua);
+                    System.out.println("Cap nhat thanh cong.");
                     break;
                 case 4:
                     System.out.print("Nhap ID user can xoa: ");
                     String idXoa = scanner.nextLine();
+
+                    if (userList.getCustomerInfo(idXoa) == null) {
+                        System.out.println("Khong tim thay user de xoa.");
+                        break;
+                    }
+
                     userList.getDeleteUser(idXoa);
+                    System.out.println("Da xoa user.");
                     break;
                 case 5:
                     System.out.println("Tam biet!");
