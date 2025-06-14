@@ -1,47 +1,94 @@
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProductList {
+    private static ProductList instance;
+    private ArrayList<Product> productList;
 
-    ArrayList<Product> pr = new ArrayList<Product>();
-
-    public ArrayList<Product> addProduct(Product pro){
-
-        pr.add(pro);
-        return pr;
-
+    // Constructor riêng tư để đảm bảo Singleton
+    private ProductList() {
+        productList = new ArrayList<>();
     }
-    public ArrayList<Product> getEditProduct(int productId, String productName){
-        for(int i =0; i < pr.size(); i++){
 
-            if(pr.get(i).getProductId() == productId){
-                System.out.print("true");
-                pr.get(i).setProductName(productName);
-            }
-        }  
-        return pr;  
-    }
-    // xoa san pham theo ID
-    public ArrayList<Product> getDeleteProduct(int producId){
-        for(int i = 0; i < pr.size(); i++){
-            if(pr.get(i).getProductId() == producId){
-                pr.remove(i);
-            }
+    // Trả về instance duy nhất
+    public static ProductList getInstance() {
+        if (instance == null) {
+            instance = new ProductList();
         }
-        return pr;
+        return instance;
     }
-    public void printProductList(){
-        for(Product p : pr){
-            System.out.println("Product ID: " + p.getProductId() + ", Product Name: " + p.getProductName() + ", Product Price: " + p.getProductPrice());
+
+    // Thêm sản phẩm
+    public void addProduct(Product product) {
+        if (product != null) {
+            productList.add(product);
         }
     }
-    public Product getProductInfo(int productId){
-        List<Product> filteredProducts = pr.stream()
-                .filter(product -> product.getProductId() == productId)
-                .collect(Collectors.toList());
-        if (filteredProducts.isEmpty()) return null;
-        return filteredProducts.get(0);
+
+    // Lấy danh sách sản phẩm
+    public ArrayList<Product> getProductList() {
+        return productList;
     }
 
+    // Sửa tên sản phẩm theo productId
+    public boolean editProductName(int productId, String newName) {
+        for (Product p : productList) {
+            if (p.getProductId() == productId) {
+                p.setProductName(newName);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Xóa sản phẩm theo ID
+    public boolean deleteProduct(int productId) {
+        return productList.removeIf(p -> p.getProductId() == productId);
+    }
+
+    // Hiển thị tất cả sản phẩm
+    public void printProductList() {
+        if (productList.isEmpty()) {
+            System.out.println("Khong co san pham nao trong danh sach.");
+            return;
+        }
+        for (Product p : productList) {
+            p.displayProductInfo();
+            System.out.println("---------------------------");
+        }
+    }
+
+    // Lấy thông tin 1 sản phẩm theo ID
+    public Product getProductInfo(int productId) {
+        return productList.stream()
+                .filter(p -> p.getProductId() == productId)
+                .findFirst()
+                .orElse(null);
+    }
+
+    // Kiểm tra sản phẩm có tồn tại
+    public boolean isProductExist(int productId) {
+        return productList.stream().anyMatch(p -> p.getProductId() == productId);
+    }
+
+    // Tìm sản phẩm theo tên gần đúng (không phân biệt hoa thường)
+    public ArrayList<Product> searchProductByName(String keyword) {
+        ArrayList<Product> result = new ArrayList<>();
+        for (Product p : productList) {
+            if (p.getProductName().toLowerCase().contains(keyword.toLowerCase())) {
+                result.add(p);
+            }
+        }
+        return result;
+    }
+
+    // Lọc sản phẩm theo sellerId
+    public ArrayList<Product> getProductsBySeller(int sellerId) {
+        ArrayList<Product> result = new ArrayList<>();
+        for (Product p : productList) {
+            if (p.getSellerId() == sellerId) {
+                result.add(p);
+            }
+        }
+        return result;
+    }
 }

@@ -1,12 +1,30 @@
-// UserList.java
 import java.util.ArrayList;
 
 public class UserList {
+    private static UserList instance;
+
+    public static UserList getInstance() {
+        if (instance == null) {
+            instance = new UserList();
+        }
+        return instance;
+    }
+
     private ArrayList<User> users = new ArrayList<>();
 
     public void addUser(User u) {
         users.add(u);
         System.out.println("Da them user: " + u.getUserID());
+    }
+
+    public User getUserInfo(String userId) {
+        for (User u : users) {
+            if (u.getUserID().equals(userId)) {
+                return u;
+            }
+        }
+        System.out.println("Khong tim thay user voi ID: " + userId);
+        return null;
     }
 
     public boolean getEditUser(String newName, String userId) {
@@ -49,5 +67,16 @@ public class UserList {
             }
         }
         return newList;
+    }
+
+    // ✅ THÊM PHẦN NÀY
+    public Customer getCustomerInfo(String customerId) {
+        for (User u : users) {
+            if (u instanceof Customer && u.getUserID().equals(customerId)) {
+                return (Customer) u;
+            }
+        }
+        System.out.println("Khong tim thay customer voi ID: " + customerId);
+        return null;
     }
 }

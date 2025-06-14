@@ -1,13 +1,15 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class TestProduct {
-    static ArrayList<Product> danhSachSanPham = new ArrayList<>();
     static Scanner scanner = new Scanner(System.in);
 
     public static void hienThiDanhSach() {
         System.out.println("\n--- DANH SACH SAN PHAM ---");
-        for (Product sp : danhSachSanPham) {
+        if (ProductList.getInstance().getProductList().isEmpty()) {
+            System.out.println("Khong co san pham nao trong danh sach.");
+            return;
+        }
+        for (Product sp : ProductList.getInstance().getProductList()) {
             sp.displayProductInfo();
             System.out.println("---------------------------");
         }
@@ -16,6 +18,14 @@ public class TestProduct {
     public static void themSanPham() {
         System.out.print("Nhap ma san pham: ");
         int productId = scanner.nextInt(); scanner.nextLine();
+
+        // Kiem tra trung ma
+        for (Product p : ProductList.getInstance().getProductList()) {
+            if (p.getProductId() == productId) {
+                System.out.println("Ma san pham da ton tai. Vui long nhap ma khac.");
+                return;
+            }
+        }
 
         System.out.print("Nhap ma nguoi ban: ");
         int sellerId = scanner.nextInt(); scanner.nextLine();
@@ -33,7 +43,7 @@ public class TestProduct {
         String description = scanner.nextLine();
 
         Product sp = new Product(productId, sellerId, productName, price, stock, description);
-        danhSachSanPham.add(sp);
+        ProductList.getInstance().addProduct(sp);
         System.out.println("Da them san pham thanh cong!");
     }
 
@@ -41,7 +51,7 @@ public class TestProduct {
         System.out.print("Nhap ma san pham can sua: ");
         int productId = scanner.nextInt(); scanner.nextLine();
 
-        for (Product sp : danhSachSanPham) {
+        for (Product sp : ProductList.getInstance().getProductList()) {
             if (sp.getProductId() == productId) {
                 System.out.print("Nhap ten moi: ");
                 String name = scanner.nextLine();
@@ -72,9 +82,9 @@ public class TestProduct {
         System.out.print("Nhap ma san pham can xoa: ");
         int productId = scanner.nextInt(); scanner.nextLine();
 
-        for (int i = 0; i < danhSachSanPham.size(); i++) {
-            if (danhSachSanPham.get(i).getProductId() == productId) {
-                danhSachSanPham.remove(i);
+        for (int i = 0; i < ProductList.getInstance().getProductList().size(); i++) {
+            if (ProductList.getInstance().getProductList().get(i).getProductId() == productId) {
+                ProductList.getInstance().getProductList().remove(i);
                 System.out.println("Da xoa san pham.");
                 return;
             }
@@ -87,11 +97,22 @@ public class TestProduct {
         System.out.print("Nhap ma san pham can ban: ");
         int productId = scanner.nextInt(); scanner.nextLine();
 
-        for (Product sp : danhSachSanPham) {
+        for (Product sp : ProductList.getInstance().getProductList()) {
             if (sp.getProductId() == productId) {
                 System.out.print("Nhap so luong muon ban: ");
                 int quantity = scanner.nextInt(); scanner.nextLine();
+                if (quantity <= 0) {
+                    System.out.println("So luong ban phai lon hon 0.");
+                    return;
+                }
+
+                if (sp.getStock() < quantity) {
+                    System.out.println("Khong du hang trong kho.");
+                    return;
+                }
+
                 sp.updateStock(quantity);
+                System.out.println("Ban san pham thanh cong.");
                 return;
             }
         }
@@ -99,10 +120,10 @@ public class TestProduct {
         System.out.println("Khong tim thay san pham can ban.");
     }
 
-    public static void testProduct(){
+    public static void testProduct() {
         // San pham mau
-        danhSachSanPham.add(new Product(1, 100, "Laptop Dell", 15000000, 10, "Laptop van phong"));
-        danhSachSanPham.add(new Product(2, 101, "Chuot Logitech", 500000, 25, "Chuot khong day"));
+        ProductList.getInstance().addProduct(new Product(1, 100, "Laptop Dell", 15000000, 10, "Laptop van phong"));
+        ProductList.getInstance().addProduct(new Product(2, 101, "Chuot Logitech", 500000, 25, "Chuot khong day"));
 
         int luaChon;
         do {
