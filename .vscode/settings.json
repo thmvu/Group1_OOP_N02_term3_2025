@@ -1,7 +1,8 @@
 {
     "java.project.sourcePaths": [
-        "StorageManagement\\src",
-        "StorageManagement\\test"
+        "StorageManagement/test",
+        "StorageManagement/src",
+        "StorageManagement/gs-serving-web-content-main/initial/src/main/java/com/example/servingwebcontent"
     ],
     "java.project.referencedLibraries": []
 }
