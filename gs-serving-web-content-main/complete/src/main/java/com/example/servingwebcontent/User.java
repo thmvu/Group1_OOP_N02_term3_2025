@@ -2,7 +2,7 @@ package com.example.servingwebcontent;
 
 // User.java
 public class User {
-    private String userID;
+    protected static String userID;
     private String fullName;
     private String gender;
     private String dob;
@@ -12,7 +12,7 @@ public class User {
     private String password;
     private String role;
 
-    public User(String userID, String fullName, String gender, String dob, String phone, String email, String address, String password, String role) {
+    public User() {
         this.userID = userID;
         this.fullName = fullName;
         this.gender = gender;
@@ -73,5 +73,9 @@ public class User {
     @Override
     public String toString() {
         return "User[ID=" + userID + ", Ten=" + fullName + ", VaiTro=" + role + "]";
+    }
+
+    public void setUserId(String string) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
