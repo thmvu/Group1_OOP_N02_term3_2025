@@ -2,7 +2,7 @@ package com.example.servingwebcontent;
 
 // User.java
 public class User {
-    protected static String userID;
+    private String userID;
     private String fullName;
     private String gender;
     private String dob;

@@ -12,6 +12,9 @@ import com.example.servingwebcontent.Product;
 
 public class ProductDAO {
 
+    public ProductDAO(Connection aivenConnection) {
+    }
+
      public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
         try (Connection conn = aivenConnection.getConnection()) {

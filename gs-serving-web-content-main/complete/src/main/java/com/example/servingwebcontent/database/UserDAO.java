@@ -24,7 +24,8 @@ public class UserDAO {
                 u.setUserId(rs.getString("user_id"));
                 u.setFullName(rs.getString("full_name"));
                 u.setGender(rs.getString("gender"));
-                u.setDob(rs.getDate("dob"));
+                java.sql.Date dobDate = rs.getDate("dob");
+                u.setDob(dobDate != null ? dobDate.toString() : null);
                 u.setPhone(rs.getString("phone"));
                 u.setEmail(rs.getString("email"));
                 u.setAddress(rs.getString("address"));
@@ -33,7 +34,6 @@ public class UserDAO {
                 users.add(u);
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return users;
     }
@@ -42,10 +42,15 @@ public class UserDAO {
         String sql = "INSERT INTO users (user_id, full_name, gender, dob, phone, email, address, password, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = aivenConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, user.getUserId());
+            pstmt.setString(1, user.getUserID());
             pstmt.setString(2, user.getFullName());
             pstmt.setString(3, user.getGender());
-            pstmt.setDate(4, user.getDob());
+            // Convert String dob to java.sql.Date
+            java.sql.Date dobDate = null;
+            if (user.getDob() != null && !user.getDob().isEmpty()) {
+                dobDate = java.sql.Date.valueOf(user.getDob());
+            }
+            pstmt.setDate(4, dobDate);
             pstmt.setString(5, user.getPhone());
             pstmt.setString(6, user.getEmail());
             pstmt.setString(7, user.getAddress());

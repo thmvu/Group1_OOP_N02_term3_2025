@@ -87,7 +87,7 @@ public class ProductList {
     public ArrayList<Product> getProductsBySeller(int sellerId) {
         ArrayList<Product> result = new ArrayList<>();
         for (Product p : productList) {
-            if (p.getSellerId() == sellerId) {
+            if (p.getSellerId().equals(String.valueOf(sellerId))) {
                 result.add(p);
             }
         }
