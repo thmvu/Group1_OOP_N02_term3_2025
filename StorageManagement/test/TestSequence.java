@@ -1,5 +1,7 @@
 package Review;
 
+import model.Sequence;
+
 public class TestSequence {
     public static void main(String[] args) {
         try {

@@ -2,6 +2,8 @@ package models;
 
 import java.util.*;
 
+import model.Product;
+
 public class Inventory {
     private Map<String, Product> products = new HashMap<>();
 

@@ -2,6 +2,9 @@ package models;
 
 import java.util.*;
 
+import model.Customer;
+import model.Product;
+
 public class Order {
     private String id;
     private Customer customer;
