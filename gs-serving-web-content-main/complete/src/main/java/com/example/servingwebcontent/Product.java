@@ -10,7 +10,7 @@ public class Product {
     private String description;    // Mô tả sản phẩm
 
     // Constructor để khởi tạo đối tượng sản phẩm
-    public Product(int productId, int sellerId, String productName, double price, int stock, String description) {
+    public Product() {
         this.productId = productId;
         this.sellerId = sellerId;
         this.productName = productName;
