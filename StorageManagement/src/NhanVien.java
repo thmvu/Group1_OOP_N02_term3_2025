@@ -3,8 +3,12 @@ public class NhanVien {
     private String hoTen;
 
     public NhanVien(String maNhanVien, String hoTen) {
-        this.maNhanVien = maNhanVien;
-        this.hoTen = hoTen;
+        try {
+            setMaNhanVien(maNhanVien);
+            setHoTen(hoTen);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Lỗi khi tạo NhanVien: " + e.getMessage());
+        }
     }
 
     public String getMaNhanVien() {
@@ -12,6 +16,9 @@ public class NhanVien {
     }
 
     public void setMaNhanVien(String maNhanVien) {
+        if (maNhanVien == null || maNhanVien.trim().isEmpty()) {
+            throw new IllegalArgumentException("Mã nhân viên không được để trống.");
+        }
         this.maNhanVien = maNhanVien;
     }
 
@@ -20,11 +27,28 @@ public class NhanVien {
     }
 
     public void setHoTen(String hoTen) {
+        if (hoTen == null || hoTen.trim().isEmpty()) {
+            throw new IllegalArgumentException("Họ tên nhân viên không được để trống.");
+        }
         this.hoTen = hoTen;
     }
 
     public void hienThiThongTin() {
-        System.out.println("Mã nhân viên: " + maNhanVien);
-        System.out.println("Họ tên: " + hoTen);
+        try {
+            System.out.println("Mã nhân viên: " + maNhanVien);
+            System.out.println("Họ tên: " + hoTen);
+        } catch (Exception e) {
+            System.out.println("Lỗi khi hiển thị thông tin nhân viên: " + e.getMessage());
+        }
+    }
+
+    // Hàm main để kiểm thử
+    public static void main(String[] args) {
+        NhanVien nv1 = new NhanVien("NV01", "Vũ Viết Tuấn");
+        nv1.hienThiThongTin();
+
+        // Test lỗi
+        NhanVien nv2 = new NhanVien("", "");
+        nv2.hienThiThongTin();
     }
 }

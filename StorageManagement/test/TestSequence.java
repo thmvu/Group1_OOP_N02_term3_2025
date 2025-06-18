@@ -2,18 +2,27 @@ package Review;
 
 public class TestSequence {
     public static void main(String[] args) {
-        Sequence sequence = new Sequence(10);
+        try {
+            Sequence sequence = new Sequence(5); // tạo sequence có 5 phần tử
 
-        // Thêm các phần tử vào sequence
-        for (int i = 0; i < 10; i++) {
-            sequence.add(Integer.toString(i));
-        }
+            sequence.add("Một");
+            sequence.add("Hai");
+            sequence.add("Ba");
+            sequence.add("Bốn");
+            sequence.add("Năm");
+            sequence.add("Thừa"); // sẽ bị lỗi và xử lý trong khối try-catch ở add()
 
-        Sequence.Selector selector = sequence.selector();
+            Sequence.Selector selector = sequence.selector();
 
-        while (!selector.end()) {
-            System.out.print(selector.current() + " ");
-            selector.next();
+            System.out.println("Duyệt qua phần tử trong Sequence:");
+            while (!selector.end()) {
+                System.out.println(selector.current());
+                selector.next();
+            }
+
+        } catch (Exception e) {
+            System.out.println("Lỗi khi chạy TestSequence: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

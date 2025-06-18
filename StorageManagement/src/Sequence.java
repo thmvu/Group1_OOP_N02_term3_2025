@@ -5,12 +5,26 @@ public class Sequence {
     private int next = 0;
 
     public Sequence(int size) {
-        items = new Object[size];
+        try {
+            items = new Object[size];
+        } catch (NegativeArraySizeException e) {
+            System.out.println("Kích thước mảng không hợp lệ: " + e.getMessage());
+            items = new Object[10]; // fallback
+        } catch (Exception e) {
+            System.out.println("Lỗi khởi tạo Sequence: " + e.getMessage());
+            items = new Object[10];
+        }
     }
 
     public void add(Object x) {
-        if(next < items.length) {
-            items[next++] = x;
+        try {
+            if (next < items.length) {
+                items[next++] = x;
+            } else {
+                throw new ArrayIndexOutOfBoundsException("Vượt quá kích thước mảng!");
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi khi thêm phần tử: " + e.getMessage());
         }
     }
 
@@ -23,11 +37,21 @@ public class Sequence {
         }
 
         public Object current() {
-            return items[i];
+            try {
+                return items[i];
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Chỉ số vượt quá giới hạn mảng: " + e.getMessage());
+                return null;
+            } catch (Exception e) {
+                System.out.println("Lỗi khi truy cập phần tử hiện tại: " + e.getMessage());
+                return null;
+            }
         }
 
         public void next() {
-            if(i < items.length) i++;
+            if (i < items.length) {
+                i++;
+            }
         }
     }
 
