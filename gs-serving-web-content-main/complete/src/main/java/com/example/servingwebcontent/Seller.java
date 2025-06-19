@@ -10,7 +10,5 @@ public class Seller extends User {
         System.out.println(getFullName() + " da ban san pham: " + productName);
     }
 
-    String getUserId() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+   
 }

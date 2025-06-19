@@ -69,13 +69,18 @@ public class UserDAO {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, user.getFullName());
             pstmt.setString(2, user.getGender());
-            pstmt.setDate(3, user.getDob());
+            // Convert String dob to java.sql.Date
+            java.sql.Date dobDate = null;
+            if (user.getDob() != null && !user.getDob().isEmpty()) {
+                dobDate = java.sql.Date.valueOf(user.getDob());
+            }
+            pstmt.setDate(3, dobDate);
             pstmt.setString(4, user.getPhone());
             pstmt.setString(5, user.getEmail());
             pstmt.setString(6, user.getAddress());
             pstmt.setString(7, user.getPassword());
             pstmt.setString(8, user.getRole());
-            pstmt.setString(9, user.getUserId());
+            pstmt.setString(9, user.getUserID());
             return pstmt.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,29 +99,30 @@ public class UserDAO {
             return false;
         }
     }
-
-    public User getUserById(String userId) {
-        String sql = "SELECT * FROM users WHERE user_id=?";
-        try (Connection conn = aivenConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                User u = new User();
-                u.setUserId(rs.getString("user_id"));
-                u.setFullName(rs.getString("full_name"));
-                u.setGender(rs.getString("gender"));
-                u.setDob(rs.getDate("dob"));
-                u.setPhone(rs.getString("phone"));
-                u.setEmail(rs.getString("email"));
-                u.setAddress(rs.getString("address"));
-                u.setPassword(rs.getString("password"));
-                u.setRole(rs.getString("role"));
-                return u;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+public User getUserById(String userId) {
+    String sql = "SELECT * FROM users WHERE user_id=?";
+    try (Connection conn = aivenConnection.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setString(1, userId);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            User u = new User();
+            u.setUserId(rs.getString("user_id"));
+            u.setFullName(rs.getString("full_name"));
+            u.setGender(rs.getString("gender"));
+            java.sql.Date dobDate = rs.getDate("dob");
+            u.setDob(dobDate != null ? dobDate.toString() : null); // ✅ đã sửa
+            u.setPhone(rs.getString("phone"));
+            u.setEmail(rs.getString("email"));
+            u.setAddress(rs.getString("address"));
+            u.setPassword(rs.getString("password"));
+            u.setRole(rs.getString("role"));
+            return u;
         }
-        return null;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return null;
+}
+
 }
