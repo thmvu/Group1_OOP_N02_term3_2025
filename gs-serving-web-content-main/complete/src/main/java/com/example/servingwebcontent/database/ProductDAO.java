@@ -1,7 +1,6 @@
 package com.example.servingwebcontent.database;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -12,14 +11,18 @@ import com.example.servingwebcontent.Product;
 
 public class ProductDAO {
 
-    public ProductDAO(Connection aivenConnection) {
+    private final Connection conn;
+
+    public ProductDAO(Connection conn) {
+        this.conn = conn;
     }
 
-     public List<Product> getAllProducts() {
+    public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
-        try (Connection conn = aivenConnection.getConnection()) {
+        try (
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM products");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM products")
+        ) {
             while (rs.next()) {
                 Product p = new Product();
                 p.setProductId(rs.getInt("product_id"));
@@ -38,8 +41,9 @@ public class ProductDAO {
 
     public boolean addProduct(Product product) {
         String sql = "INSERT INTO products (seller_id, product_name, price, stock, description) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = aivenConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (
+            PreparedStatement pstmt = conn.prepareStatement(sql)
+        ) {
             pstmt.setString(1, product.getSellerId());
             pstmt.setString(2, product.getProductName());
             pstmt.setDouble(3, product.getPrice());
@@ -54,8 +58,9 @@ public class ProductDAO {
 
     public boolean updateProduct(Product product) {
         String sql = "UPDATE products SET seller_id=?, product_name=?, price=?, stock=?, description=? WHERE product_id=?";
-        try (Connection conn = aivenConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (
+            PreparedStatement pstmt = conn.prepareStatement(sql)
+        ) {
             pstmt.setString(1, product.getSellerId());
             pstmt.setString(2, product.getProductName());
             pstmt.setDouble(3, product.getPrice());
@@ -71,8 +76,9 @@ public class ProductDAO {
 
     public boolean deleteProduct(int productId) {
         String sql = "DELETE FROM products WHERE product_id=?";
-        try (Connection conn = aivenConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (
+            PreparedStatement pstmt = conn.prepareStatement(sql)
+        ) {
             pstmt.setInt(1, productId);
             return pstmt.executeUpdate() > 0;
         } catch (Exception e) {
@@ -83,8 +89,9 @@ public class ProductDAO {
 
     public Product getProductById(int productId) {
         String sql = "SELECT * FROM products WHERE product_id=?";
-        try (Connection conn = aivenConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (
+            PreparedStatement pstmt = conn.prepareStatement(sql)
+        ) {
             pstmt.setInt(1, productId);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {

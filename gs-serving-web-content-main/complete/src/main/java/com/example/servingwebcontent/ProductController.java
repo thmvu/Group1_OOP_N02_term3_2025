@@ -1,29 +1,26 @@
 package com.example.servingwebcontent;
 
-import com.example.servingwebcontent.database.ProductDAO;
-import com.example.servingwebcontent.Product;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.sql.Connection;
-import java.util.List;
-import java.sql.DriverManager;
+import com.example.servingwebcontent.database.ProductDAO;
+import com.example.servingwebcontent.database.aivenConnection;
 
 @Controller
-
 public class ProductController {
-    @Autowired
-    private Connection aivenConnection; // hoặc DataSource nếu dùng Spring config
 
     @GetMapping("/products")
     public String showProducts(Model model) {
         try {
-            ProductDAO dao = new ProductDAO(aivenConnection);
+            // Gọi static method để lấy connection
+            ProductDAO dao = new ProductDAO(aivenConnection.getConnection());
             List<Product> products = dao.getAllProducts();
             model.addAttribute("products", products);
         } catch (Exception e) {
+            e.printStackTrace(); // để log lỗi ra console
             model.addAttribute("error", "Lỗi khi tải sản phẩm!");
         }
 
