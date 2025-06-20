@@ -12,16 +12,28 @@ public class User {
     private String password;
     private String role;
 
+   public User(String userID, String fullName, String gender, String dob,
+            String phone, String email, String address, String password, String role) {
+    this.userID = userID;
+    this.fullName = fullName;
+    this.gender = gender;
+    this.dob = dob;
+    this.phone = phone;
+    this.email = email;
+    this.address = address;
+    this.password = password;
+    this.role = role;
+}
     public User() {
-        this.userID = userID;
-        this.fullName = fullName;
-        this.gender = gender;
-        this.dob = dob;
-        this.phone = phone;
-        this.email = email;
-        this.address = address;
-        this.password = password;
-        this.role = role;
+        this.userID = "";
+        this.fullName = "";
+        this.gender = "";
+        this.dob = "";
+        this.phone = "";
+        this.email = "";
+        this.address = "";
+        this.password = "";
+        this.role = "customer"; // Mặc định là customer
     }
 
     // Getters & Setters
