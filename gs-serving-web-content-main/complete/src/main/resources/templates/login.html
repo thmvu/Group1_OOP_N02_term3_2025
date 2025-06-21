@@ -1,22 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Đăng nhập</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
+    <title>Đăng nhập | KIOTVU</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
         }
 
         body {
-            background-image: url('https://images.unsplash.com/photo-1612832021094-2b9ab95608ea?auto=format&fit=crop&w=1400&q=80');
+            margin: 0;
+            padding: 0;
+            background: url('/images/warehouse.jpg') no-repeat center center fixed;
             background-size: cover;
-            background-position: center;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -24,72 +22,105 @@
         }
 
         .login-container {
-            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(18px);
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.3);
             padding: 40px 30px;
-            border-radius: 16px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            width: 360px;
+            width: 400px;
+            max-width: 90%;
+            color: #fff;
+            animation: fadeIn 1s ease-in-out;
         }
 
-        .login-container h2 {
+        .logo {
+            display: block;
+            margin: 0 auto 12px;
+            height: 80px;
+        }
+
+        h1.title {
+            font-size: 26px;
             text-align: center;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        h2.subtitle {
+            font-size: 18px;
+            text-align: center;
+            font-weight: 400;
+            color: #f1f1f1;
             margin-bottom: 24px;
-            font-weight: 600;
-            color: #333;
         }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         label {
             display: block;
             margin-bottom: 6px;
             font-weight: 500;
+            font-size: 15px;
         }
 
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 12px 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #333;
         }
 
         button {
             width: 100%;
-            padding: 12px;
-            background-color: #4CAF50;
+            padding: 14px;
+            background: linear-gradient(to right, #1abc9c, #16a085);
             border: none;
             color: white;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             transition: background 0.3s ease;
         }
 
         button:hover {
-            background-color: #45a049;
+            background: linear-gradient(to right, #16a085, #1abc9c);
         }
 
         .error {
-            color: red;
-            margin-top: 12px;
+            color: #ffdddd;
+            background: rgba(255, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 10px;
             text-align: center;
             font-size: 14px;
+            margin-top: 14px;
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 <div class="login-container">
-    <h2>Đăng nhập hệ thống</h2>
+    <img src="/images/logo.png" alt="KIOTVU Logo" class="logo">
+    <h1 class="title">Chào mừng đến với KIOTVU</h1>
+    <h2 class="subtitle">Vui lòng đăng nhập để tiếp tục</h2>
+
     <form th:action="@{/login}" method="post">
         <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email" placeholder="Nhập email của bạn" required>
+            <label for="email">Email hoặc SĐT:</label>
+            <input type="text" id="email" name="email" placeholder="Nhập email hoặc số điện thoại" required>
         </div>
 
         <div class="form-group">
@@ -97,7 +128,7 @@
             <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
         </div>
 
-        <button type="submit">Đăng nhập</button>
+        <button type="submit">🔐 Đăng nhập</button>
 
         <div class="error" th:if="${error}" th:text="${error}"></div>
     </form>

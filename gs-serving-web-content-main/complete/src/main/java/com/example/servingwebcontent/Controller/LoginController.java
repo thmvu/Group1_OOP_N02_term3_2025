@@ -18,13 +18,16 @@ import java.util.List;
 @Controller
 public class LoginController {
 
-    private UserDAO userDAO = new UserDAOImpl();
+    private final UserDAO userDAO = new UserDAOImpl();
 
+    // Hiển thị form đăng nhập
     @GetMapping("/login")
-    public String showLoginForm() {
-        return "login"; // tạo login.html sau
+    public String showLoginForm(Model model) {
+        model.addAttribute("user", new User());
+        return "login"; // Tên file HTML: login.html
     }
 
+    // Xử lý đăng nhập
     @PostMapping("/login")
     public String login(@RequestParam("email") String email,
                         @RequestParam("password") String password,
@@ -32,17 +35,22 @@ public class LoginController {
                         Model model) {
 
         User user = userDAO.getUserByEmailAndPassword(email, password);
-        if (user != null) {
-            session.setAttribute("user", user);
-            String role = user.getRole();
 
-            if ("customer".equalsIgnoreCase(role)) {
-                return "redirect:/customer/home";
-            } else if ("seller".equalsIgnoreCase(role)) {
-                return "redirect:/seller/home";
-            } else {
-                model.addAttribute("error", "Vai trò không hợp lệ.");
-                return "login";
+        if (user != null) {
+            // Lưu thông tin người dùng vào session
+            session.setAttribute("user", user);
+
+            // Điều hướng theo vai trò
+            switch (user.getRole().toLowerCase()) {
+                case "customer":
+                    return "redirect:/customer/home";
+                case "seller":
+                    return "redirect:/seller/home";
+                case "manager":
+                    return "redirect:/manager/home";
+                default:
+                    model.addAttribute("error", "Vai trò không hợp lệ.");
+                    return "login";
             }
         } else {
             model.addAttribute("error", "Sai email hoặc mật khẩu.");
@@ -50,9 +58,10 @@ public class LoginController {
         }
     }
 
+    // Xử lý đăng xuất
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate();
+        session.invalidate(); // Xoá session
         return "redirect:/login";
     }
 }

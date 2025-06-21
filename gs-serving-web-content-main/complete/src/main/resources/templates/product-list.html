@@ -1,32 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Danh sách sản phẩm</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<h2>Danh sách sản phẩm</h2>
+<body class="bg-light">
+<div class="container mt-5">
+    <h2 class="text-center mb-4">📦 Danh sách sản phẩm</h2>
 
-<div th:if="${error}">
-    <p style="color:red;" th:text="${error}"></p>
+    <div class="text-end mb-3">
+        <a href="/products/add" class="btn btn-primary">➕ Thêm sản phẩm</a>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <table class="table table-bordered table-striped shadow-sm">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Tên</th>
+            <th>Giá</th>
+            <th>Tồn kho</th>
+            <th>Mô tả</th>
+            <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.productId}"></td>
+            <td th:text="${product.productName}"></td>
+            <td th:text="${product.price} + ' đ'"></td>
+            <td th:text="${product.stock}"></td>
+            <td th:text="${product.description}"></td>
+            <td>
+                <a th:href="@{'/productste/' + ${product.productId}}"
+                   class="btn btn-sm btn-danger"/edit/' + ${product.productId}}" class="btn btn-sm btn-warning">✏️ Sửa</a>
+                <a th:href="@{'/products/dele
+                   onclick="return confirm('Bạn có chắc muốn xoá?')">🗑️ Xoá</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
-
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Người bán</th>
-        <th>Tên sản phẩm</th>
-        <th>Giá</th>
-        <th>Tồn kho</th>
-        <th>Mô tả</th>
-    </tr>
-    <tr th:each="product : ${products}">
-        <td th:text="${product.productId}"></td>
-        <td th:text="${product.seller.userId}"></td>
-        <td th:text="${product.productName}"></td>
-        <td th:text="${product.price}"></td>
-        <td th:text="${product.stock}"></td>
-        <td th:text="${product.description}"></td>
-    </tr>
-</table>
 </body>
 </html>

@@ -2,7 +2,7 @@ package com.example.servingwebcontent.model;
 
 public class Product {
     private int productId;           // Mã sản phẩm
-    private Seller seller;           // Người bán (đối tượng Seller)
+    private Seller seller;          // Người bán (tên hoặc ID người bán)
     private String productName;      // Tên sản phẩm
     private double price;            // Giá sản phẩm
     private int stock;               // Số lượng sản phẩm
@@ -32,8 +32,8 @@ public class Product {
     public int getProductId() { return productId; }
     public void setProductId(int productId) { this.productId = productId; }
 
-    public Seller getSeller() { return seller; }
-    public void setSeller(Seller seller) { this.seller = seller; }
+    public Seller getSeller() {return seller;}
+    public void setSeller(Seller seller) {this.seller = seller;}
 
     public String getProductName() { return productName; }
     public void setProductName(String productName) { this.productName = productName; }
@@ -50,7 +50,7 @@ public class Product {
     // Phương thức hiển thị thông tin sản phẩm
     public void displayProductInfo() {
         System.out.println("Mã sản phẩm: " + productId);
-        System.out.println((seller != null ? seller.getUserID() : "Chưa gán") + "Người bán: ");
+        System.out.println("Người bán: " + (seller != null ? seller : "Chưa gán"));
         System.out.println("Tên sản phẩm: " + productName);
         System.out.println("Giá: " + price);
         System.out.println("Số lượng còn lại: " + stock);
@@ -67,11 +67,5 @@ public class Product {
         }
     }
 
-    public String getSellerId() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void setSellerId(String string) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    
 }
