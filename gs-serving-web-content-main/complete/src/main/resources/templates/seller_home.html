@@ -15,7 +15,7 @@
             <th>Giá</th>
         </tr>
         <tr th:each="product : ${products}">
-            <td th:text="${product.name}">Tên</td>
+            <td th:text="${product.productName}">Tên</td>
             <td th:text="${product.description}">Mô tả</td>
             <td th:text="${product.price}">Giá</td>
         </tr>

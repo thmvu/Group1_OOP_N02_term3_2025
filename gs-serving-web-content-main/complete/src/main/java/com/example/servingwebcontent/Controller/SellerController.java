@@ -24,7 +24,7 @@ public class SellerController {
             return "redirect:/login";
         }
 
-        List<Product> products = productDAO.getProductsBySellerId(user.getUserId());
+        List<Product> products = productDAO.getProductsBySellerId(user.getUserID());
         model.addAttribute("products", products);
 
         return "seller_home"; // tạo file seller_home.html

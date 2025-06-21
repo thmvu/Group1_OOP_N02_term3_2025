@@ -87,11 +87,4 @@ public class User {
         return "User[ID=" + userID + ", Ten=" + fullName + ", VaiTro=" + role + "]";
     }
 
-    public void setUserId(String string) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public String getUserId() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

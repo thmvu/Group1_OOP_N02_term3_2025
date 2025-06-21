@@ -50,7 +50,7 @@ public class Product {
     // Phương thức hiển thị thông tin sản phẩm
     public void displayProductInfo() {
         System.out.println("Mã sản phẩm: " + productId);
-        System.out.println((seller != null ? seller.getUserId() : "Chưa gán") + "Người bán: ");
+        System.out.println((seller != null ? seller.getUserID() : "Chưa gán") + "Người bán: ");
         System.out.println("Tên sản phẩm: " + productName);
         System.out.println("Giá: " + price);
         System.out.println("Số lượng còn lại: " + stock);
