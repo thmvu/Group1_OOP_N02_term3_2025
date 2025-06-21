@@ -1,5 +1,4 @@
-package com.example.servingwebcontent;
-
+package com.example.servingwebcontent.model;
 
 public class Product {
     private int productId;           // Mã sản phẩm

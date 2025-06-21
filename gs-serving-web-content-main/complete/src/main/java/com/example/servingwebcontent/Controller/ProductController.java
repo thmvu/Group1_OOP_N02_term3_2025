@@ -1,4 +1,4 @@
-package com.example.servingwebcontent;
+package com.example.servingwebcontent.Controller;
 
 import java.util.List;
 
@@ -7,7 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.example.servingwebcontent.database.ProductDAO;
+import com.example.servingwebcontent.database.ProductDAOImpl;
 import com.example.servingwebcontent.database.aivenConnection;
+import com.example.servingwebcontent.model.Product;
 
 @Controller
 public class ProductController {
@@ -15,8 +17,7 @@ public class ProductController {
     @GetMapping("/products")
     public String showProducts(Model model) {
         try {
-            // Gọi static method để lấy connection
-            ProductDAO dao = new ProductDAO(aivenConnection.getConnection());
+            ProductDAO dao = new ProductDAOImpl(); // ✅ sửa chỗ này
             List<Product> products = dao.getAllProducts();
             model.addAttribute("products", products);
         } catch (Exception e) {
@@ -26,5 +27,4 @@ public class ProductController {
 
         return "product-list";
     }
-
 }

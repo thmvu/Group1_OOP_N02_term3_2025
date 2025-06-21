@@ -1,13 +1,20 @@
 package com.example.servingwebcontent.database;
 
 
-import com.example.servingwebcontent.Customer_Product;
-import com.example.servingwebcontent.Customer;
-import com.example.servingwebcontent.Product;
-
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.example.servingwebcontent.model.Customer;
+import com.example.servingwebcontent.model.Customer_Product;
+import com.example.servingwebcontent.model.Product;
 
 public class CustomerProductDAO {
     public boolean addTransaction(Customer_Product cp) {

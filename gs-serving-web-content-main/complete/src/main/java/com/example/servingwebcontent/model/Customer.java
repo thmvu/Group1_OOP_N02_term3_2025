@@ -1,4 +1,4 @@
-package com.example.servingwebcontent;
+package com.example.servingwebcontent.model;
 
 // Customer.java
 public class Customer extends User {

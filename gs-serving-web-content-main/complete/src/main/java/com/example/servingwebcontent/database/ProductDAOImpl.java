@@ -1,9 +1,9 @@
 package com.example.servingwebcontent.database;
 
 
-import com.example.servingwebcontent.Product;
-import com.example.servingwebcontent.Seller;
 import com.example.servingwebcontent.database.aivenConnection;
+import com.example.servingwebcontent.model.Product;
+import com.example.servingwebcontent.model.Seller;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -9,7 +9,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.servingwebcontent.User;
+import com.example.servingwebcontent.database.aivenConnection;
+import com.example.servingwebcontent.database.UserDAO;
+
+
+import com.example.servingwebcontent.model.User;
 
 public class UserDAOImpl implements UserDAO {
 
@@ -116,6 +120,38 @@ public class UserDAOImpl implements UserDAO {
         }
         return null;
     }
+@Override
+public User getUserByEmailAndPassword(String email, String password) {
+    User user = null;
+    try (Connection conn = aivenConnection.getConnection()) {
+        String query = "SELECT * FROM users WHERE email = ? AND password = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1, email);
+        stmt.setString(2, password);
+
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            user = new User();
+            user.setUserID(rs.getString("user_id"));
+            user.setFullName(rs.getString("full_name"));
+            user.setGender(rs.getString("gender"));
+            java.sql.Date dobDate = rs.getDate("dob");
+            user.setDob(dobDate != null ? dobDate.toString() : null);
+            user.setPhone(rs.getString("phone"));
+            user.setEmail(rs.getString("email"));
+            user.setAddress(rs.getString("address"));
+            user.setPassword(rs.getString("password"));
+            user.setRole(rs.getString("role"));
+        }
+
+        rs.close();
+        stmt.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return user;
+}
 
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         User user = new User(null, null, null, null, null, null, null, null, null);
@@ -131,4 +167,5 @@ public class UserDAOImpl implements UserDAO {
         user.setRole(rs.getString("role"));
         return user;
     }
+
 }

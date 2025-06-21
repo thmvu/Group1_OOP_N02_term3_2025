@@ -2,7 +2,7 @@ package com.example.servingwebcontent.database;
 
 import java.util.List;
 
-import com.example.servingwebcontent.Product;
+import com.example.servingwebcontent.model.Product;
 
 public interface ProductDAO {
     List<Product> getAllProducts();
