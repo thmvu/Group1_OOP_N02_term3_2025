@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang Quản Lý</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .header {
+            background-color: #343a40;
+            color: white;
+            padding: 1rem 2rem;
+        }
+        .header h1 {
+            font-size: 2rem;
+        }
+        .stats-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .table th {
+            background-color: #dee2e6;
+        }
+        .btn-custom {
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header d-flex justify-content-between align-items-center">
+        <h1>Quản Lý Hệ Thống</h1>
+        <a href="/logout" class="btn btn-outline-light">Đăng xuất</a>
+    </div>
+
+    <div class="container my-4">
+        <div class="row mb-4">
+            <div class="col-md-2 stats-card bg-primary text-white p-3 text-center me-2">
+                <h5>Người dùng</h5>
+                <h2 th:text="${totalUsers}">0</h2>
+            </div>
+            <div class="col-md-2 stats-card bg-success text-white p-3 text-center me-2">
+                <h5>Khách hàng</h5>
+                <h2 th:text="${totalCustomers}">0</h2>
+            </div>
+            <div class="col-md-2 stats-card bg-info text-white p-3 text-center me-2">
+                <h5>Nhà cung cấp</h5>
+                <h2 th:text="${totalSellers}">0</h2>
+            </div>
+            <div class="col-md-2 stats-card bg-warning text-white p-3 text-center me-2">
+                <h5>Sản phẩm</h5>
+                <h2 th:text="${totalProducts}">0</h2>
+            </div>
+            <div class="col-md-2 stats-card bg-danger text-white p-3 text-center">
+                <h5>Giao dịch</h5>
+                <h2 th:text="${totalTransactions}">0</h2>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <h3>Danh sách người dùng</h3>
+            <a href="/manager/users/add" class="btn btn-success btn-sm btn-custom mb-2">+ Thêm người dùng</a>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Họ tên</th>
+                        <th>Giới tính</th>
+                        <th>Ngày sinh</th>
+                        <th>Email</th>
+                        <th>Vai trò</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.userID}">U01</td>
+                        <td th:text="${user.fullName}">Nguyễn Văn A</td>
+                        <td th:text="${user.gender}">Nam</td>
+                        <td th:text="${user.dob}">1990-01-01</td>
+                        <td th:text="${user.email}">user@email.com</td>
+                        <td th:text="${user.role}">CUSTOMER</td>
+                        <td>
+                            <a th:href="@{'/manager/users/edit/' + ${user.userID}}" class="btn btn-warning btn-sm">Sửa</a>
+                            <a th:href="@{'/manager/users/delete/' + ${user.userID}}" class="btn btn-danger btn-sm" onclick="return confirm('Xoá người dùng này?');">Xoá</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mb-4">
+            <h3>Danh sách sản phẩm</h3>
+            <a href="/manager/products/add" class="btn btn-success btn-sm btn-custom mb-2">+ Thêm sản phẩm</a>
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Giá</th>
+                        <th>Tồn kho</th>
+                        <th>Nhà cung cấp</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="product : ${products}">
+                        <td th:text="${product.productId}">101</td>
+                        <td th:text="${product.productName}">Chuột</td>
+                        <td th:text="${product.price}">250000</td>
+                        <td th:text="${product.stock}">50</td>
+                        <td th:text="${product.seller != null ? product.seller.userID : 'Chưa có'}"></td>
+                        <td>
+                            <a th:href="@{'/manager/products/edit/' + ${product.productId}}" class="btn btn-warning btn-sm">Sửa</a>
+                            <a th:href="@{'/manager/products/delete/' + ${product.productId}}" class="btn btn-danger btn-sm" onclick="return confirm('Xoá sản phẩm này?');">Xoá</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
