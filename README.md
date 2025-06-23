@@ -93,7 +93,7 @@ class thietbi_nguoidung{
 
 ```
 
-
+```
 
 ![Sequence Diagram](image/Digagram.PNG)
 ![Sequence Diagram](image/Sequence_Diagram.png)
