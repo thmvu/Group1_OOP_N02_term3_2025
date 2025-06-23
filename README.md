@@ -11,9 +11,14 @@ Vũ Viết Tuấn
 ## Mô tả
 
 ```
-Thiết bị (Device)
+
+Hàng hóa (Product)
++Thiết bị (Device)
 
 Người dùng (User)
++Khách hàng (Customer)
++Nhân viên(seller)
++Quản lí(Manager)
 
 Thiết bị và Người dùng (Device-User)
 
@@ -63,13 +68,13 @@ class thietbi_nguoidung{
 # Yêu cầu(Request)
 - Giao diện Java Spring Boot.
 - Có chức năng quản lý Kho Hàng
-# PHuong thuc hoat dong (Operations)
+# Phương thức hoạt động (Operations)
 
 ```
  Thêm, sửa, xóa hàng hóa
 
 + Liệt kê thông tin về hàng hóa trong kho, có thể lọc ra các sản phẩm theo phân loại sản phẩm
-- Có chức năng quản lý .......
+- Có chức năng quản lý hàng hóa, người dùng ,....
 
 + Thêm, sửa, xóa người dùng.
 - Có chức năng gán sản phẩm cho người dùng. 
@@ -85,6 +90,9 @@ class thietbi_nguoidung{
 
 
 ```
+
+```
+
 
 
 ![Sequence Diagram](image/Digagram.PNG)
