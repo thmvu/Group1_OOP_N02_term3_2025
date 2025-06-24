@@ -1,7 +1,7 @@
 package com.example.servingwebcontent.model;
 
 public class Product {
-    private int productId;           // Mã sản phẩm
+    private Integer productId;           // Mã sản phẩm
     private Seller seller;          // Người bán (tên hoặc ID người bán)
     private String productName;      // Tên sản phẩm
     private double price;            // Giá sản phẩm
@@ -10,7 +10,7 @@ public class Product {
 
     // Constructor mặc định
     public Product() {
-        this.productId = 0;
+        this.productId = null;
         this.seller = null;
         this.productName = "";
         this.price = 0.0;
@@ -29,8 +29,8 @@ public class Product {
     }
 
     // Getter và Setter
-    public int getProductId() { return productId; }
-    public void setProductId(int productId) { this.productId = productId; }
+    public Integer getProductId() { return productId; }
+    public void setProductId(Integer productId) { this.productId = productId; }
 
     public Seller getSeller() {return seller;}
     public void setSeller(Seller seller) {this.seller = seller;}

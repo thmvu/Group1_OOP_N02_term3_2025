@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.model;
 
+
 // User.java
 public class User {
     private String userID;
