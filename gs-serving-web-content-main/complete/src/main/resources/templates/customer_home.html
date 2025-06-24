@@ -1,95 +1,171 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Khách hàng - Trang chủ</title>
     <meta charset="UTF-8">
+    <title>Trang khách hàng</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 
 <div class="container mt-5">
 
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Chào mừng bạn đến với cửa hàng!</h2>
-        <a href="/logout" class="btn btn-danger">Đăng xuất</a>
+    <h2 class="mb-4">👤 Chào mừng khách hàng!</h2>
+
+    <!-- Dropdown tài khoản -->
+    <div class="dropdown text-end mb-4">
+        <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Tài khoản
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#infoModal">Xem thông tin</a></li>
+            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#updateModal">Cập nhật thông tin</a></li>
+            <li><a class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
+        </ul>
     </div>
 
-    <!-- Danh sách sản phẩm -->
-    <h4 class="mb-3">Danh sách sản phẩm</h4>
+    <!-- Tìm kiếm & lọc giá -->
+    <form class="row mb-4" method="get" action="/customer/home">
+        <div class="col-md-3">
+            <input type="number" class="form-control" name="minPrice" step="1000" min="0" th:value="${minPrice}" placeholder="Giá thấp nhất">
+        </div>
+        <div class="col-md-3">
+            <input type="number" class="form-control" name="maxPrice" step="1000" min="0" th:value="${maxPrice}" placeholder="Giá cao nhất">
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="keyword" th:value="${keyword}" placeholder="Tìm trong mô tả sản phẩm">
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-outline-success w-100" type="submit">🔍 Lọc</button>
+        </div>
+    </form>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4" th:if="${products != null}">
-        <div class="col" th:each="product : ${products}">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title text-primary" th:text="${product.productName}">Tên sản phẩm</h5>
-                    <p class="card-text" th:text="${product.description}">Mô tả</p>
+    <a href="/products" class="btn btn-outline-primary mb-3">Xem tất cả sản phẩm</a>
+
+    <h4 class="mt-4">🛒 Giỏ hàng</h4>
+    <div th:if="${cart != null and !cart.isEmpty()}">
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center" th:each="item : ${cart}">
+                <div>
+                    <span th:text="${item.product.productName}">Tên sản phẩm</span> -
+                    <span th:text="${item.quantity}">Số lượng</span>
                 </div>
-                <div class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center">
-                    <span class="text-success fw-bold" th:text="${product.price} + ' VNĐ'">0 VNĐ</span>
+                <div>
+                    <a th:href="@{/cart/add(productId=${item.product.productId}, qty=1)}" class="btn btn-sm btn-outline-secondary bg-white text-dark">🔼</a>
+                    <a th:href="@{/cart/decrease(productId=${item.product.productId})}" class="btn btn-sm btn-outline-secondary bg-white text-dark">🔽</a>
+                    <a th:href="@{/cart/remove(productId=${item.product.productId})}" class="btn btn-sm btn-danger">🗑</a>
+                </div>
+            </li>
+        </ul>
+        <div class="mt-3 fw-bold">Tổng tiền: <span th:text="${total} + ' VNĐ'">0 VNĐ</span></div>
+        <form method="post" action="/cart/checkout" class="mt-3">
+            <button type="submit" class="btn btn-primary">✅ Thanh toán</button>
+        </form>
+    </div>
+    <div th:if="${cart == null or cart.isEmpty()}" class="alert alert-info mt-3">
+        Giỏ hàng của bạn đang trống.
+    </div>
 
-                    <!-- Nút ➕ đỏ -->
-                    <form th:action="@{/cart/add}" method="post" class="d-inline">
-                        <input type="hidden" name="productId" th:value="${product.id}" />
-                        <button type="submit" class="btn btn-sm btn-danger">+</button>
+    <h4 class="mt-5">📦 Gợi ý sản phẩm</h4>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" th:each="product : ${products}">
+            <div class="card h-100 shadow">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${product.productName}">Tên sản phẩm</h5>
+                    <p class="card-text" th:text="${product.description}">Mô tả</p>
+                    <p class="text-success fw-bold" th:text="${product.price} + ' VNĐ'">Giá</p>
+
+                    <!-- Thêm vào giỏ -->
+                    <form th:action="@{/cart/add}" method="get" class="d-flex align-items-center mb-2">
+                        <input type="hidden" th:name="productId" th:value="${product.productId}" />
+                        <input type="number" name="qty" min="1" value="1" class="form-control me-2" style="width: 70px;" />
+                        <button type="submit" class="btn btn-outline-danger">🛒 Thêm Vào Giỏ Hàng</button>
                     </form>
 
-                    <!-- Nút Mua ngay -->
-                    <form th:action="@{/buy}" method="post" class="d-inline">
-                        <input type="hidden" name="productId" th:value="${product.id}" />
-                        <button type="submit" class="btn btn-sm btn-success">Mua</button>
+                    <!-- Mua ngay -->
+                    <form th:action="@{/cart/buynow}" method="post">
+                        <input type="hidden" name="productId" th:value="${product.productId}" />
+                        <input type="hidden" name="qty" value="1" />
+                        <button type="submit" class="btn btn-success btn-sm">💸 Mua Ngay</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Thông báo nếu không có sản phẩm -->
-    <div th:if="${products == null or products.isEmpty()}" class="alert alert-info mt-3">
-        Hiện tại chưa có sản phẩm nào.
+    <!-- Nút chuyển trang -->
+    <div class="mt-4 d-flex justify-content-center">
+        <nav>
+            <ul class="pagination">
+                <li class="page-item" th:if="${page > 1}">
+                    <a class="page-link" th:href="@{'/customer/home'(page=${page - 1}, keyword=${keyword}, minPrice=${minPrice}, maxPrice=${maxPrice})}">Trước</a>
+                </li>
+                <li class="page-item">
+                    <span class="page-link" th:text="'Trang ' + ${page}">Trang</span>
+                </li>
+                <li class="page-item" th:if="${page < totalPages}">
+                    <a class="page-link" th:href="@{'/customer/home'(page=${page + 1}, keyword=${keyword}, minPrice=${minPrice}, maxPrice=${maxPrice})}">Tiếp</a>
+                </li>
+            </ul>
+        </nav>
     </div>
-
-    <!-- Giỏ hàng tổng -->
-    <h4 class="mt-5">🧺 Giỏ hàng của bạn</h4>
-
-    <div class="table-responsive" th:if="${cart != null and !cart.isEmpty()}">
-        <table class="table table-bordered">
-            <thead class="table-light">
-                <tr>
-                    <th>Tên sản phẩm</th>
-                    <th>Số lượng</th>
-                    <th>Giá</th>
-                    <th>Thành tiền</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="item : ${cart}">
-                    <td th:text="${item.product.productName}">Tên sản phẩm</td>
-                    <td th:text="${item.quantity}">1</td>
-                    <td th:text="${item.product.price} + ' VNĐ'">0 VNĐ</td>
-                    <td th:text="${item.product.price * item.quantity} + ' VNĐ'">0 VNĐ</td>
-                    <td>
-                        <form th:action="@{/cart/remove}" method="post">
-                            <input type="hidden" name="productId" th:value="${item.product.id}" />
-                            <button type="submit" class="btn btn-sm btn-danger">🗑</button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div th:if="${cart == null or cart.isEmpty()}" class="alert alert-secondary mt-3">
-        Giỏ hàng của bạn đang trống.
-    </div>
-
-    <!-- Nút mua toàn bộ -->
-    <form th:action="@{/checkout}" method="post" class="mt-3" th:if="${cart != null and !cart.isEmpty()}">
-        <button type="submit" class="btn btn-success">🧾 Mua hàng</button>
-    </form>
-
 </div>
 
+<!-- Modal: Xem Thông Tin -->
+<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="infoModalLabel">Thông Tin Cá Nhân</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Họ tên:</strong> <span th:text="${userForm.fullName}">Tên</span></p>
+        <p><strong>Email:</strong> <span th:text="${userForm.email}">email@example.com</span></p>
+        <p><strong>SĐT:</strong> <span th:text="${userForm.phone}">0123456789</span></p>
+        <p><strong>Địa chỉ:</strong> <span th:text="${userForm.address}">Địa chỉ</span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Cập Nhật Thông Tin -->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="post" action="/user/update" th:object="${userForm}" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">Cập Nhật Thông Tin</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="fullName" class="form-label">Họ tên</label>
+          <input type="text" th:field="*{fullName}" class="form-control" id="fullName">
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" th:field="*{email}" class="form-control" id="email">
+        </div>
+        <div class="mb-3">
+          <label for="phone" class="form-label">SĐT</label>
+          <input type="text" th:field="*{phone}" class="form-control" id="phone">
+        </div>
+        <div class="mb-3">
+          <label for="address" class="form-label">Địa chỉ</label>
+          <input type="text" th:field="*{address}" class="form-control" id="address">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

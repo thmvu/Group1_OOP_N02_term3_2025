@@ -1,7 +1,6 @@
 package com.example.servingwebcontent.database;
 
 import java.util.List;
-
 import com.example.servingwebcontent.model.Product;
 
 public interface ProductDAO {
@@ -11,7 +10,10 @@ public interface ProductDAO {
     boolean deleteProduct(int productId);
     Product getProductById(int productId);
 
-    //lấy danh sách tất cả sản phẩm của một Seller
-    
-    List<Product> getProductsBySellerId(String sellerId); // ✅ mới thêm
+    List<Product> getProductsBySellerId(String sellerId);
+
+    // ✅ MỞ RỘNG:
+    List<Product> filterByPriceRange(double minPrice, double maxPrice);
+    List<Product> searchByDescription(String keyword);
+    List<Product> getProductsPaginated(int page, int pageSize);
 }

@@ -1,14 +1,11 @@
 package com.example.servingwebcontent.database;
 
-
-import com.example.servingwebcontent.database.aivenConnection;
 import com.example.servingwebcontent.model.Product;
 import com.example.servingwebcontent.model.Seller;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class ProductDAOImpl implements ProductDAO {
 
@@ -103,8 +100,64 @@ public class ProductDAOImpl implements ProductDAO {
         String sql = "SELECT * FROM products WHERE seller_id=?";
         try (Connection conn = aivenConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
             pstmt.setString(1, sellerId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                products.add(mapResultSetToProduct(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    // ✅ Lọc sản phẩm theo khoảng giá
+    @Override
+    public List<Product> filterByPriceRange(double minPrice, double maxPrice) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT * FROM products WHERE price BETWEEN ? AND ?";
+        try (Connection conn = aivenConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setDouble(1, minPrice);
+            pstmt.setDouble(2, maxPrice);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                products.add(mapResultSetToProduct(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    // ✅ Tìm sản phẩm theo mô tả
+    @Override
+    public List<Product> searchByDescription(String keyword) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT * FROM products WHERE LOWER(description) LIKE ?";
+        try (Connection conn = aivenConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, "%" + keyword.toLowerCase() + "%");
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                products.add(mapResultSetToProduct(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    // ✅ Phân trang sản phẩm
+    @Override
+    public List<Product> getProductsPaginated(int page, int pageSize) {
+        List<Product> products = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+        String sql = "SELECT * FROM products LIMIT ? OFFSET ?";
+        try (Connection conn = aivenConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, pageSize);
+            pstmt.setInt(2, offset);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 products.add(mapResultSetToProduct(rs));
@@ -123,7 +176,7 @@ public class ProductDAOImpl implements ProductDAO {
         String sellerId = rs.getString("seller_id");
         if (sellerId != null) {
             Seller s = new Seller(sellerId, sellerId, sellerId, sellerId, sellerId, sellerId, sellerId, sellerId);
-            s.setUserID(sellerId); // chỉ set ID, chưa lấy full user
+            s.setUserID(sellerId); // chỉ set ID, chưa lấy đầy đủ thông tin
             p.setSeller(s);
         }
 

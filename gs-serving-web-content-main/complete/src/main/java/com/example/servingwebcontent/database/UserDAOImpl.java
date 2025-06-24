@@ -9,10 +9,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.servingwebcontent.database.aivenConnection;
-import com.example.servingwebcontent.database.UserDAO;
-
-
 import com.example.servingwebcontent.model.User;
 
 public class UserDAOImpl implements UserDAO {
@@ -103,7 +99,6 @@ public class UserDAOImpl implements UserDAO {
         return null;
     }
 
-    // ✅ Hàm phục vụ đăng nhập
     @Override
     public User findByUsername(String username) {
         String sql = "SELECT * FROM users WHERE phone = ? OR email = ?";
@@ -120,39 +115,62 @@ public class UserDAOImpl implements UserDAO {
         }
         return null;
     }
-@Override
-public User getUserByEmailAndPassword(String email, String password) {
-    User user = null;
-    try (Connection conn = aivenConnection.getConnection()) {
-        String query = "SELECT * FROM users WHERE email = ? AND password = ?";
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setString(1, email);
-        stmt.setString(2, password);
 
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-            user = new User();
-            user.setUserID(rs.getString("user_id"));
-            user.setFullName(rs.getString("full_name"));
-            user.setGender(rs.getString("gender"));
-            java.sql.Date dobDate = rs.getDate("dob");
-            user.setDob(dobDate != null ? dobDate.toString() : null);
-            user.setPhone(rs.getString("phone"));
-            user.setEmail(rs.getString("email"));
-            user.setAddress(rs.getString("address"));
-            user.setPassword(rs.getString("password"));
-            user.setRole(rs.getString("role"));
+    @Override
+    public User getUserByEmailAndPassword(String email, String password) {
+        User user = null;
+        try (Connection conn = aivenConnection.getConnection()) {
+            String query = "SELECT * FROM users WHERE email = ? AND password = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                user = mapResultSetToUser(rs);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        rs.close();
-        stmt.close();
-    } catch (Exception e) {
-        e.printStackTrace();
+        return user;
     }
 
-    return user;
-}
+    // ✅ Thêm mới: kiểm tra email tồn tại
+    @Override
+    public boolean existsByEmail(String email) {
+        String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
+        try (Connection conn = aivenConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
+    // ✅ Thêm mới: đổi mật khẩu người dùng
+    @Override
+    public boolean changePassword(String userId, String newPassword) {
+        String sql = "UPDATE users SET password = ? WHERE user_id = ?";
+        try (Connection conn = aivenConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, newPassword);
+            pstmt.setString(2, userId);
+            return pstmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // ✅ Hàm chuyển ResultSet sang đối tượng User
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         User user = new User(null, null, null, null, null, null, null, null, null);
         user.setUserID(rs.getString("user_id"));
@@ -167,5 +185,4 @@ public User getUserByEmailAndPassword(String email, String password) {
         user.setRole(rs.getString("role"));
         return user;
     }
-
 }

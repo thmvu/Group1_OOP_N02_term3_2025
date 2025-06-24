@@ -13,4 +13,12 @@ public interface UserDAO {
     User findByUsername(String username); 
     // Thêm dòng này để phục vụ đăng nhập
     User getUserByEmailAndPassword(String email, String password);
+
+    // ✅ Chức năng thêm mới:
+
+    // Kiểm tra người dùng đã tồn tại theo email
+    boolean existsByEmail(String email);
+
+    // Đổi mật khẩu theo userId
+    boolean changePassword(String userId, String newPassword);
 }
