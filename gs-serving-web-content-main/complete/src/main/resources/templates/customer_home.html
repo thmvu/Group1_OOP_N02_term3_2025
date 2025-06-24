@@ -8,11 +8,14 @@
 <body class="bg-light">
 
 <div class="container mt-5">
+
+    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Chào mừng bạn đến với cửa hàng!</h2>
         <a href="/logout" class="btn btn-danger">Đăng xuất</a>
     </div>
 
+    <!-- Danh sách sản phẩm -->
     <h4 class="mb-3">Danh sách sản phẩm</h4>
 
     <div class="row row-cols-1 row-cols-md-3 g-4" th:if="${products != null}">
@@ -22,16 +25,70 @@
                     <h5 class="card-title text-primary" th:text="${product.productName}">Tên sản phẩm</h5>
                     <p class="card-text" th:text="${product.description}">Mô tả</p>
                 </div>
-                <div class="card-footer bg-white border-top-0">
+                <div class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center">
                     <span class="text-success fw-bold" th:text="${product.price} + ' VNĐ'">0 VNĐ</span>
+
+                    <!-- Nút ➕ đỏ -->
+                    <form th:action="@{/cart/add}" method="post" class="d-inline">
+                        <input type="hidden" name="productId" th:value="${product.id}" />
+                        <button type="submit" class="btn btn-sm btn-danger">+</button>
+                    </form>
+
+                    <!-- Nút Mua ngay -->
+                    <form th:action="@{/buy}" method="post" class="d-inline">
+                        <input type="hidden" name="productId" th:value="${product.id}" />
+                        <button type="submit" class="btn btn-sm btn-success">Mua</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <div th:if="${products == null || products.isEmpty()}" class="alert alert-info mt-3">
+    <!-- Thông báo nếu không có sản phẩm -->
+    <div th:if="${products == null or products.isEmpty()}" class="alert alert-info mt-3">
         Hiện tại chưa có sản phẩm nào.
     </div>
+
+    <!-- Giỏ hàng tổng -->
+    <h4 class="mt-5">🧺 Giỏ hàng của bạn</h4>
+
+    <div class="table-responsive" th:if="${cart != null and !cart.isEmpty()}">
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th>Thành tiền</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${cart}">
+                    <td th:text="${item.product.productName}">Tên sản phẩm</td>
+                    <td th:text="${item.quantity}">1</td>
+                    <td th:text="${item.product.price} + ' VNĐ'">0 VNĐ</td>
+                    <td th:text="${item.product.price * item.quantity} + ' VNĐ'">0 VNĐ</td>
+                    <td>
+                        <form th:action="@{/cart/remove}" method="post">
+                            <input type="hidden" name="productId" th:value="${item.product.id}" />
+                            <button type="submit" class="btn btn-sm btn-danger">🗑</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:if="${cart == null or cart.isEmpty()}" class="alert alert-secondary mt-3">
+        Giỏ hàng của bạn đang trống.
+    </div>
+
+    <!-- Nút mua toàn bộ -->
+    <form th:action="@{/checkout}" method="post" class="mt-3" th:if="${cart != null and !cart.isEmpty()}">
+        <button type="submit" class="btn btn-success">🧾 Mua hàng</button>
+    </form>
+
 </div>
 
 </body>

@@ -2,7 +2,7 @@ package com.example.servingwebcontent.model;
 
 public class Product {
     private int productId;           // Mã sản phẩm
-    private Seller seller;          // Người bán (tên hoặc ID người bán)
+    private Seller seller;           // Người bán
     private String productName;      // Tên sản phẩm
     private double price;            // Giá sản phẩm
     private int stock;               // Số lượng sản phẩm
@@ -28,26 +28,61 @@ public class Product {
         this.description = "Không có mô tả";
     }
 
-    // Getter và Setter
-    public int getProductId() { return productId; }
-    public void setProductId(int productId) { this.productId = productId; }
+    // Getter & Setter
+    public int getProductId() {
+        return productId;
+    }
 
-    public Seller getSeller() {return seller;}
-    public void setSeller(Seller seller) {this.seller = seller;}
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
 
-    public String getProductName() { return productName; }
-    public void setProductName(String productName) { this.productName = productName; }
+    // ✅ Thêm getter "id" để dùng trong Thymeleaf (giải quyết lỗi ${product.id})
+    public int getId() {
+        return productId;
+    }
 
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    public Seller getSeller() {
+        return seller;
+    }
 
-    public int getStock() { return stock; }
-    public void setStock(int stock) { this.stock = stock; }
+    public void setSeller(Seller seller) {
+        this.seller = seller;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getProductName() {
+        return productName;
+    }
 
-    // Phương thức hiển thị thông tin sản phẩm
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    // Hiển thị thông tin sản phẩm
     public void displayProductInfo() {
         System.out.println("Mã sản phẩm: " + productId);
         System.out.println("Người bán: " + (seller != null ? seller : "Chưa gán"));
@@ -57,7 +92,7 @@ public class Product {
         System.out.println("Mô tả: " + description);
     }
 
-    // Phương thức cập nhật số lượng sản phẩm sau khi bán
+    // Cập nhật tồn kho
     public void updateStock(int quantitySold) {
         if (quantitySold <= stock) {
             stock -= quantitySold;
@@ -66,6 +101,4 @@ public class Product {
             System.out.println("Số lượng bán không hợp lệ. Không đủ hàng!");
         }
     }
-
-    
 }
