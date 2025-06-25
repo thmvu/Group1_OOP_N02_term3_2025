@@ -7,61 +7,75 @@
 </head>
 <body class="bg-light">
 
-<div class="container mt-5">
-    <h2 class="mb-4 text-warning">📝 Xác nhận đơn hàng</h2>
+<div class="container mt-5 mb-5">
+    <h2 class="mb-4 text-success">✅ Xác nhận đơn hàng</h2>
 
-    <!-- Thông tin khách hàng -->
+    <!-- Thông báo lỗi (hết hàng) -->
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}">Lỗi</div>
+
     <form method="post" action="/cart/confirm/submit">
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <label class="form-label fw-bold">Họ tên</label>
-                <input type="text" name="fullName" class="form-control" th:value="${user.fullName}" required>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label fw-bold">Email</label>
-                <input type="email" class="form-control" th:value="${user.email}" readonly>
-            </div>
-            <div class="col-md-6 mt-3">
-                <label class="form-label fw-bold">Số điện thoại</label>
-                <input type="text" name="phone" class="form-control" th:value="${user.phone}" required>
-            </div>
-            <div class="col-md-6 mt-3">
-                <label class="form-label fw-bold">Địa chỉ giao hàng</label>
-                <input type="text" name="address" class="form-control" th:value="${user.address}" required>
+        <!-- Thông tin khách hàng -->
+        <div class="card mb-4">
+            <div class="card-header bg-light fw-bold">📋 Thông tin khách hàng</div>
+            <div class="card-body row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Họ tên:</label>
+                    <input type="text" name="fullName" class="form-control" th:value="${user.fullName}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Email:</label>
+                    <input type="email" class="form-control" th:value="${user.email}" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">SĐT:</label>
+                    <input type="text" name="phone" class="form-control" th:value="${user.phone}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Địa chỉ:</label>
+                    <input type="text" name="address" class="form-control" th:value="${user.address}" required>
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label">Ghi chú đơn hàng (tuỳ chọn):</label>
+                    <textarea name="note" class="form-control" rows="3" placeholder="Ví dụ: Giao ngoài giờ hành chính, gọi trước khi giao..."></textarea>
+                </div>
             </div>
         </div>
 
         <!-- Chi tiết đơn hàng -->
-        <h4>🛒 Chi tiết sản phẩm</h4>
-        <table class="table table-bordered">
-            <thead class="table-secondary">
-                <tr>
-                    <th>Tên sản phẩm</th>
-                    <th>Số lượng</th>
-                    <th>Đơn giá</th>
-                    <th>Thành tiền</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="item : ${items}">
-                    <td th:text="${item.product.productName}">Tên SP</td>
-                    <td th:text="${item.quantity}">SL</td>
-                    <td th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Giá</td>
-                    <td th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Tổng</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr class="table-success">
-                    <th colspan="3" class="text-end">Tổng cộng:</th>
-                    <th th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Tổng cộng</th>
-                </tr>
-            </tfoot>
-        </table>
+        <div class="card">
+            <div class="card-header bg-light fw-bold">🛒 Chi tiết đơn hàng</div>
+            <div class="card-body p-0">
+                <table class="table table-bordered mb-0">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th>Tên sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Đơn giá</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${items}">
+                            <td th:text="${item.product.productName}">Sản phẩm</td>
+                            <td class="text-center" th:text="${item.quantity}">1</td>
+                            <td th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Giá</td>
+                            <td th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Tổng</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-success fw-bold">
+                            <td colspan="3" class="text-end">Tổng cộng:</td>
+                            <td th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Tổng</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
 
-        <!-- Nút xác nhận -->
-        <div class="mt-4 d-flex justify-content-between">
-            <a href="/customer/home" class="btn btn-secondary">❌ Hủy</a>
-            <button type="submit" class="btn btn-success">✅ Xác nhận đặt hàng</button>
+        <!-- Nút điều hướng -->
+        <div class="mt-4 text-end">
+            <a href="/customer/home" class="btn btn-outline-secondary me-2">⬅ Quay lại</a>
+            <button type="submit" class="btn btn-primary">🛍 Xác nhận đặt hàng</button>
         </div>
     </form>
 </div>

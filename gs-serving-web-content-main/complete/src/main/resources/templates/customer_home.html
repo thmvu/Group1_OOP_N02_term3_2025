@@ -1,4 +1,3 @@
-<!-- 🔰 Bắt đầu -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -11,21 +10,20 @@
 <div class="container mt-5">
     <h2 class="mb-4">👤 Chào mừng khách hàng!</h2>
 
-    <!-- Dropdown tài khoản -->
+    <!-- Tài khoản -->
     <div class="dropdown text-end mb-4">
-        <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
             Tài khoản
         </button>
         <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#infoModal">Xem thông tin</a></li>
             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#updateModal">Cập nhật thông tin</a></li>
-            <li><a class="dropdown-item text-primary" href="/order/history">🕓 Lịch sử đơn hàng</a></li>
             <li><a class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
         </ul>
     </div>
 
-    <!-- Tìm kiếm & lọc -->
-    <form class="row mb-4" method="get" action="/customer/home">
+    <!-- Form lọc -->
+    <form class="row mb-3" method="get" action="/customer/home">
         <div class="col-md-3">
             <input type="number" class="form-control" name="minPrice" step="1000" min="0" th:value="${minPrice}" placeholder="Giá thấp nhất">
         </div>
@@ -40,7 +38,11 @@
         </div>
     </form>
 
-    <a href="/products" class="btn btn-outline-primary mb-3">Xem tất cả sản phẩm</a>
+    <!-- Menu điều hướng -->
+    <div class="mb-4">
+        <a href="/products" class="btn btn-outline-primary">Xem tất cả sản phẩm</a>
+        <a href="/order/history" class="btn btn-outline-secondary ms-2">🕓 Xem lịch sử đơn hàng</a>
+    </div>
 
     <!-- Giỏ hàng -->
     <h4 class="mt-4">🛒 Giỏ hàng</h4>
@@ -48,8 +50,7 @@
         <ul class="list-group">
             <li class="list-group-item d-flex justify-content-between align-items-center" th:each="item : ${cart}">
                 <div>
-                    <span th:text="${item.product.productName}">Tên sản phẩm</span> -
-                    <span th:text="${item.quantity}">Số lượng</span>
+                    <span th:text="${item.product.productName} + ' - ' + ${item.quantity}">Tên sản phẩm - Số lượng</span>
                 </div>
                 <div>
                     <a th:href="@{/cart/add(productId=${item.product.productId}, qty=1)}" class="btn btn-sm btn-outline-secondary">🔼</a>
@@ -59,22 +60,21 @@
             </li>
         </ul>
         <div class="mt-3 fw-bold">
-            Tổng tiền:
-            <span th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0 VNĐ</span>
+            Tổng tiền: <span th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0 VNĐ</span>
         </div>
-        <form method="post" action="/cart/checkout" class="mt-3">
-            <button type="submit" class="btn btn-primary">✅ Thanh toán</button>
-        </form>
 
-        <!-- ✅ Nút xem lịch sử đơn hàng (luôn hiển thị rõ ràng) -->
-        <a href="/order/history" class="btn btn-outline-secondary mt-2">🕓 Xem lịch sử đơn hàng</a>
+        <!-- Nút thanh toán giỏ hàng -->
+        <form th:action="@{/cart/checkout}" method="post">
+            <button type="submit" class="btn btn-primary mt-3">✅ Thanh toán giỏ hàng</button>
+        </form>
     </div>
+
     <div th:if="${cart == null or cart.isEmpty()}" class="alert alert-info mt-3">
         Giỏ hàng của bạn đang trống.
     </div>
 
-    <!-- Gợi ý sản phẩm -->
-    <h4 class="mt-5">📦 Gợi ý sản phẩm</h4>
+    <!-- Sản phẩm -->
+    <h4 class="mt-5">📦 Sản phẩm hiện có</h4>
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col" th:each="product : ${products}">
             <div class="card h-100 shadow">
@@ -97,23 +97,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Phân trang -->
-    <div class="mt-4 d-flex justify-content-center">
-        <nav>
-            <ul class="pagination">
-                <li class="page-item" th:if="${page > 1}">
-                    <a class="page-link" th:href="@{'/customer/home'(page=${page - 1}, keyword=${keyword}, minPrice=${minPrice}, maxPrice=${maxPrice})}">Trước</a>
-                </li>
-                <li class="page-item">
-                    <span class="page-link" th:text="'Trang ' + ${page}">Trang</span>
-                </li>
-                <li class="page-item" th:if="${page < totalPages}">
-                    <a class="page-link" th:href="@{'/customer/home'(page=${page + 1}, keyword=${keyword}, minPrice=${minPrice}, maxPrice=${maxPrice})}">Tiếp</a>
-                </li>
-            </ul>
-        </nav>
     </div>
 </div>
 
@@ -172,7 +155,6 @@
   </div>
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

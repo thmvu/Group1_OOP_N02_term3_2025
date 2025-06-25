@@ -3,6 +3,7 @@ package com.example.servingwebcontent.Controller;
 import com.example.servingwebcontent.database.ProductDAO;
 import com.example.servingwebcontent.database.ProductDAOImpl;
 import com.example.servingwebcontent.model.CartItem;
+import com.example.servingwebcontent.model.OrderHistory;
 import com.example.servingwebcontent.model.Product;
 import com.example.servingwebcontent.model.User;
 
@@ -18,26 +19,22 @@ import java.util.stream.Collectors;
 public class CustomerController {
 
     private final ProductDAO productDAO = new ProductDAOImpl();
-    private static final int PRODUCTS_PER_PAGE = 6;
 
-    // Trang chủ khách hàng
     @GetMapping("/customer/home")
     public String showCustomerHome(HttpSession session, Model model,
                                    @RequestParam(value = "keyword", required = false) String keyword,
                                    @RequestParam(value = "minPrice", required = false) Double minPrice,
-                                   @RequestParam(value = "maxPrice", required = false) Double maxPrice,
-                                   @RequestParam(value = "page", defaultValue = "1") int page) {
+                                   @RequestParam(value = "maxPrice", required = false) Double maxPrice) {
 
         User user = (User) session.getAttribute("user");
         if (user == null || !"customer".equalsIgnoreCase(user.getRole())) return "redirect:/login";
 
         List<Product> products = productDAO.getAllProducts();
 
-        // Lọc theo từ khóa và giá
         if (keyword != null && !keyword.isEmpty()) {
             products = products.stream()
                     .filter(p -> p.getProductName().toLowerCase().contains(keyword.toLowerCase())
-                              || p.getDescription().toLowerCase().contains(keyword.toLowerCase()))
+                            || p.getDescription().toLowerCase().contains(keyword.toLowerCase()))
                     .collect(Collectors.toList());
         }
 
@@ -49,37 +46,21 @@ public class CustomerController {
             products = products.stream().filter(p -> p.getPrice() <= maxPrice).collect(Collectors.toList());
         }
 
-        // Phân trang
-        int totalProducts = products.size();
-        int totalPages = (int) Math.ceil((double) totalProducts / PRODUCTS_PER_PAGE);
-        int fromIndex = (page - 1) * PRODUCTS_PER_PAGE;
-        int toIndex = Math.min(fromIndex + PRODUCTS_PER_PAGE, totalProducts);
-        if (fromIndex > toIndex) {
-            fromIndex = 0;
-            page = 1;
-        }
-
-        List<Product> pageProducts = products.subList(fromIndex, toIndex);
-
-        // Lấy giỏ hàng
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart == null) cart = new ArrayList<>();
 
         double total = cart.stream().mapToDouble(i -> i.getProduct().getPrice() * i.getQuantity()).sum();
 
-        model.addAttribute("products", pageProducts);
+        model.addAttribute("products", products);
         model.addAttribute("cart", cart);
         model.addAttribute("total", total);
         model.addAttribute("userForm", user);
         model.addAttribute("keyword", keyword);
         model.addAttribute("minPrice", minPrice);
         model.addAttribute("maxPrice", maxPrice);
-        model.addAttribute("page", page);
-        model.addAttribute("totalPages", totalPages);
         return "customer_home";
     }
 
-    // Thêm vào giỏ
     @GetMapping("/cart/add")
     public String addToCart(@RequestParam("productId") int productId,
                             @RequestParam(value = "qty", defaultValue = "1") int qty,
@@ -104,7 +85,6 @@ public class CustomerController {
         return "redirect:/customer/home";
     }
 
-    // Giảm số lượng
     @GetMapping("/cart/decrease")
     public String decreaseQuantity(@RequestParam("productId") int productId, HttpSession session) {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
@@ -123,7 +103,6 @@ public class CustomerController {
         return "redirect:/customer/home";
     }
 
-    // Xoá sản phẩm
     @GetMapping("/cart/remove")
     public String removeFromCart(@RequestParam("productId") int productId, HttpSession session) {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
@@ -134,7 +113,12 @@ public class CustomerController {
         return "redirect:/customer/home";
     }
 
-    // Trang xác nhận đơn hàng
+    @PostMapping("/cart/clear")
+    public String clearCart(HttpSession session) {
+        session.removeAttribute("cart");
+        return "redirect:/customer/home";
+    }
+
     @PostMapping("/cart/checkout")
     public String checkout(HttpSession session, Model model) {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
@@ -145,63 +129,64 @@ public class CustomerController {
         model.addAttribute("items", cart);
         model.addAttribute("user", user);
         model.addAttribute("total", cart.stream().mapToDouble(i -> i.getProduct().getPrice() * i.getQuantity()).sum());
+        session.setAttribute("checkoutItems", cart);
         return "confirm_order";
     }
 
-    // Xác nhận đặt hàng và lưu lịch sử
     @PostMapping("/cart/confirm/submit")
     public String submitOrder(@RequestParam String fullName,
                               @RequestParam String phone,
                               @RequestParam String address,
+                              @RequestParam(required = false) String note,
                               HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        List<CartItem> checkoutItems = (List<CartItem>) session.getAttribute("checkoutItems");
+        if (user == null || checkoutItems == null || checkoutItems.isEmpty()) return "redirect:/customer/home";
 
-        if (user == null || cart == null || cart.isEmpty()) return "redirect:/customer/home";
-
-        // Cập nhật thông tin người dùng
         user.setFullName(fullName);
         user.setPhone(phone);
         user.setAddress(address);
         session.setAttribute("user", user);
 
-        // Kiểm tra tồn kho
-        for (CartItem item : cart) {
+        for (CartItem item : checkoutItems) {
             Product product = productDAO.getProductById(item.getProduct().getProductId());
             if (product.getStock() < item.getQuantity()) {
                 model.addAttribute("error", "Không đủ hàng cho sản phẩm: " + product.getProductName());
-                return "redirect:/customer/home";
+                model.addAttribute("items", checkoutItems);
+                model.addAttribute("user", user);
+                model.addAttribute("total", checkoutItems.stream().mapToDouble(i -> i.getProduct().getPrice() * i.getQuantity()).sum());
+                return "confirm_order";
             }
         }
 
-        // Cập nhật tồn kho
-        for (CartItem item : cart) {
+        for (CartItem item : checkoutItems) {
             Product product = productDAO.getProductById(item.getProduct().getProductId());
             product.setStock(product.getStock() - item.getQuantity());
             productDAO.updateProduct(product);
         }
 
-        // Lưu lịch sử đơn hàng
-        List<List<CartItem>> orderHistory = (List<List<CartItem>>) session.getAttribute("orderHistory");
+        List<OrderHistory> orderHistory = (List<OrderHistory>) session.getAttribute("orderHistory");
         if (orderHistory == null) orderHistory = new ArrayList<>();
 
-        List<CartItem> orderCopy = cart.stream()
+        List<CartItem> orderCopy = checkoutItems.stream()
                 .map(i -> new CartItem(i.getProduct(), i.getQuantity()))
                 .collect(Collectors.toList());
 
-        orderHistory.add(orderCopy);
+        double total = orderCopy.stream().mapToDouble(i -> i.getProduct().getPrice() * i.getQuantity()).sum();
+
+        OrderHistory newOrder = new OrderHistory(fullName, phone, address, orderCopy, total, new Date());
+        orderHistory.add(newOrder);
         session.setAttribute("orderHistory", orderHistory);
 
-        // Gửi dữ liệu cho trang order_summary
-        model.addAttribute("items", cart);
+        model.addAttribute("items", orderCopy);
         model.addAttribute("user", user);
-        model.addAttribute("total", cart.stream().mapToDouble(i -> i.getProduct().getPrice() * i.getQuantity()).sum());
+        model.addAttribute("total", total);
+        model.addAttribute("note", note);
 
-        session.removeAttribute("cart");
+        session.removeAttribute("checkoutItems");
         return "order_summary";
     }
 
-    // Mua ngay
     @PostMapping("/cart/buynow")
     public String buyNow(@RequestParam("productId") int productId,
                          @RequestParam(value = "qty", defaultValue = "1") int qty,
@@ -214,22 +199,23 @@ public class CustomerController {
         }
 
         List<CartItem> buyNowItems = List.of(new CartItem(product, qty));
+        session.setAttribute("checkoutItems", buyNowItems);
+
         model.addAttribute("items", buyNowItems);
         model.addAttribute("user", user);
         model.addAttribute("total", qty * product.getPrice());
         return "confirm_order";
     }
 
-    // ✅ Lịch sử đơn hàng
     @GetMapping("/order/history")
     public String viewOrderHistory(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null) return "redirect:/login";
 
-        List<List<CartItem>> orderHistory = (List<List<CartItem>>) session.getAttribute("orderHistory");
+        List<OrderHistory> orderHistory = (List<OrderHistory>) session.getAttribute("orderHistory");
         if (orderHistory == null) orderHistory = new ArrayList<>();
 
         model.addAttribute("orderHistory", orderHistory);
-        return "order_history"; // cần file order_history.html
+        return "order_history";
     }
 }

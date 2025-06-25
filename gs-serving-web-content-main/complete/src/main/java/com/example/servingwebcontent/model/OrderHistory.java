@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.model;
 
+import java.util.Date;
 import java.util.List;
 
 public class OrderHistory {
@@ -8,18 +9,20 @@ public class OrderHistory {
     private String address;
     private List<CartItem> items;
     private double total;
+    private Date orderDate;
 
-    // Constructor không tham số (bắt buộc nếu muốn dùng với Spring hoặc JSON)
+    // Constructor mặc định
     public OrderHistory() {
     }
 
     // Constructor đầy đủ
-    public OrderHistory(String fullName, String phone, String address, List<CartItem> items, double total) {
+    public OrderHistory(String fullName, String phone, String address, List<CartItem> items, double total, Date orderDate) {
         this.fullName = fullName;
         this.phone = phone;
         this.address = address;
         this.items = items;
         this.total = total;
+        this.orderDate = orderDate;
     }
 
     // Getters & Setters
@@ -61,5 +64,13 @@ public class OrderHistory {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public Date getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
     }
 }
