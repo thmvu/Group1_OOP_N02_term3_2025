@@ -47,25 +47,36 @@
     <!-- Giỏ hàng -->
     <h4 class="mt-4">🛒 Giỏ hàng</h4>
     <div th:if="${cart != null and !cart.isEmpty()}">
-        <ul class="list-group">
-            <li class="list-group-item d-flex justify-content-between align-items-center" th:each="item : ${cart}">
-                <div>
-                    <span th:text="${item.product.productName} + ' - ' + ${item.quantity}">Tên sản phẩm - Số lượng</span>
-                </div>
-                <div>
-                    <a th:href="@{/cart/add(productId=${item.product.productId}, qty=1)}" class="btn btn-sm btn-outline-secondary">🔼</a>
-                    <a th:href="@{/cart/decrease(productId=${item.product.productId})}" class="btn btn-sm btn-outline-secondary">🔽</a>
-                    <a th:href="@{/cart/remove(productId=${item.product.productId})}" class="btn btn-sm btn-danger">🗑</a>
-                </div>
-            </li>
-        </ul>
-        <div class="mt-3 fw-bold">
-            Tổng tiền: <span th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0 VNĐ</span>
-        </div>
+        <form th:action="@{/cart/checkout-selected}" method="post">
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center"
+                    th:each="item : ${cart}">
+                    <div class="form-check">
+                        <input class="form-check-input me-2" type="checkbox" name="selectedItems"
+                               th:value="${item.product.productId}" id="check-${item.product.productId}">
+                        <label class="form-check-label" th:for="${'check-' + item.product.productId}">
+                            <span th:text="${item.product.productName} + ' - ' + ${item.quantity}">
+                                Tên sản phẩm - Số lượng
+                            </span>
+                        </label>
+                    </div>
+                    <div>
+                        <a th:href="@{/cart/add(productId=${item.product.productId}, qty=1)}" class="btn btn-sm btn-outline-secondary">🔼</a>
+                        <a th:href="@{/cart/decrease(productId=${item.product.productId})}" class="btn btn-sm btn-outline-secondary">🔽</a>
+                        <a th:href="@{/cart/remove(productId=${item.product.productId})}" class="btn btn-sm btn-danger">🗑</a>
+                    </div>
+                </li>
+            </ul>
 
-        <!-- Nút thanh toán giỏ hàng -->
+            <div class="mt-3 fw-bold">
+                Tổng tiền: <span th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0 VNĐ</span>
+            </div>
+
+            <button type="submit" class="btn btn-success mt-3">✅ Thanh toán các sản phẩm đã chọn</button>
+        </form>
+
         <form th:action="@{/cart/checkout}" method="post">
-            <button type="submit" class="btn btn-primary mt-3">✅ Thanh toán giỏ hàng</button>
+            <button type="submit" class="btn btn-outline-primary mt-2">💳 Thanh toán toàn bộ giỏ hàng</button>
         </form>
     </div>
 

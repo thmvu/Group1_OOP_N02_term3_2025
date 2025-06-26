@@ -119,6 +119,37 @@ public class CustomerController {
         return "redirect:/customer/home";
     }
 
+    // ➕ Đã thêm mới: chỉ thanh toán sản phẩm được tích chọn
+    @PostMapping("/cart/checkout-selected")
+    public String checkoutSelected(@RequestParam(value = "selectedItems", required = false) List<Integer> selectedItemIds,
+                                   HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+
+        if (user == null || cart == null || cart.isEmpty()) return "redirect:/customer/home";
+
+        if (selectedItemIds == null || selectedItemIds.isEmpty()) {
+            model.addAttribute("message", "Vui lòng chọn ít nhất một sản phẩm để thanh toán.");
+            model.addAttribute("cart", cart);
+            model.addAttribute("total", cart.stream().mapToDouble(i -> i.getProduct().getPrice() * i.getQuantity()).sum());
+            model.addAttribute("userForm", user);
+            return "customer_home";
+        }
+
+        List<CartItem> selectedItems = cart.stream()
+                .filter(item -> selectedItemIds.contains(item.getProduct().getProductId()))
+                .collect(Collectors.toList());
+
+        double total = selectedItems.stream().mapToDouble(i -> i.getProduct().getPrice() * i.getQuantity()).sum();
+
+        session.setAttribute("checkoutItems", selectedItems);
+        model.addAttribute("items", selectedItems);
+        model.addAttribute("user", user);
+        model.addAttribute("total", total);
+
+        return "confirm_order";
+    }
+
     @PostMapping("/cart/checkout")
     public String checkout(HttpSession session, Model model) {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
