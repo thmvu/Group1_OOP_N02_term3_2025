@@ -10,7 +10,7 @@
 <div class="container mt-5 mb-5">
     <h2 class="mb-4 text-success">✅ Xác nhận đơn hàng</h2>
 
-    <!-- Thông báo lỗi (hết hàng) -->
+    <!-- Thông báo lỗi nếu hết hàng -->
     <div th:if="${error}" class="alert alert-danger" th:text="${error}">Lỗi</div>
 
     <form method="post" action="/cart/confirm/submit">
@@ -36,7 +36,8 @@
                 </div>
                 <div class="col-md-12">
                     <label class="form-label">Ghi chú đơn hàng (tuỳ chọn):</label>
-                    <textarea name="note" class="form-control" rows="3" placeholder="Ví dụ: Giao ngoài giờ hành chính, gọi trước khi giao..."></textarea>
+                    <textarea name="note" class="form-control" rows="3"
+                              placeholder="Ví dụ: Giao ngoài giờ hành chính, gọi trước khi giao..."></textarea>
                 </div>
             </div>
         </div>
@@ -56,16 +57,16 @@
                     </thead>
                     <tbody>
                         <tr th:each="item : ${items}">
-                            <td th:text="${item.product.productName}">Sản phẩm</td>
+                            <td th:text="${item.product.productName}">Tên sản phẩm</td>
                             <td class="text-center" th:text="${item.quantity}">1</td>
-                            <td th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Giá</td>
-                            <td th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Tổng</td>
+                            <td class="text-end" th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0 VNĐ</td>
+                            <td class="text-end" th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0 VNĐ</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr class="table-success fw-bold">
                             <td colspan="3" class="text-end">Tổng cộng:</td>
-                            <td th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Tổng</td>
+                            <td class="text-end" th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0 VNĐ</td>
                         </tr>
                     </tfoot>
                 </table>

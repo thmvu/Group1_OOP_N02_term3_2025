@@ -85,32 +85,71 @@ public class CustomerController {
         return "redirect:/customer/home";
     }
 
-    @GetMapping("/cart/decrease")
-    public String decreaseQuantity(@RequestParam("productId") int productId, HttpSession session) {
+    @GetMapping("/cart/add-ajax")
+    @ResponseBody
+    public Map<String, Object> addToCartAjax(@RequestParam("productId") int productId,
+                                             @RequestParam(value = "qty", defaultValue = "1") int qty,
+                                             HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        Product product = productDAO.getProductById(productId);
+        if (product == null || qty < 1) {
+            response.put("success", false);
+            response.put("message", "Sản phẩm không tồn tại hoặc số lượng không hợp lệ.");
+            return response;
+        }
+
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        if (cart == null) cart = new ArrayList<>();
+
+        boolean found = false;
+        for (CartItem item : cart) {
+            if (item.getProduct().getProductId() == productId) {
+                item.setQuantity(item.getQuantity() + qty);
+                found = true;
+                break;
+            }
+        }
+        if (!found) cart.add(new CartItem(product, qty));
+
+        session.setAttribute("cart", cart);
+
+        response.put("success", true);
+        response.put("message", "Đã thêm vào giỏ hàng.");
+        return response;
+    }
+
+    @GetMapping("/cart/decrease-ajax")
+    @ResponseBody
+    public Map<String, Object> decreaseAjax(@RequestParam("productId") int productId, HttpSession session) {
+        Map<String, Object> res = new HashMap<>();
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart != null) {
-            Iterator<CartItem> iterator = cart.iterator();
-            while (iterator.hasNext()) {
-                CartItem item = iterator.next();
+            Iterator<CartItem> it = cart.iterator();
+            while (it.hasNext()) {
+                CartItem item = it.next();
                 if (item.getProduct().getProductId() == productId) {
                     if (item.getQuantity() > 1) item.setQuantity(item.getQuantity() - 1);
-                    else iterator.remove();
+                    else it.remove();
                     break;
                 }
             }
             session.setAttribute("cart", cart);
         }
-        return "redirect:/customer/home";
+        res.put("success", true);
+        return res;
     }
 
-    @GetMapping("/cart/remove")
-    public String removeFromCart(@RequestParam("productId") int productId, HttpSession session) {
+    @GetMapping("/cart/remove-ajax")
+    @ResponseBody
+    public Map<String, Object> removeAjax(@RequestParam("productId") int productId, HttpSession session) {
+        Map<String, Object> res = new HashMap<>();
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart != null) {
             cart.removeIf(item -> item.getProduct().getProductId() == productId);
             session.setAttribute("cart", cart);
         }
-        return "redirect:/customer/home";
+        res.put("success", true);
+        return res;
     }
 
     @PostMapping("/cart/clear")
@@ -119,7 +158,6 @@ public class CustomerController {
         return "redirect:/customer/home";
     }
 
-    // ➕ Đã thêm mới: chỉ thanh toán sản phẩm được tích chọn
     @PostMapping("/cart/checkout-selected")
     public String checkoutSelected(@RequestParam(value = "selectedItems", required = false) List<Integer> selectedItemIds,
                                    HttpSession session, Model model) {
@@ -225,16 +263,22 @@ public class CustomerController {
         Product product = productDAO.getProductById(productId);
         User user = (User) session.getAttribute("user");
 
-        if (product == null || qty < 1 || user == null || product.getStock() < qty) {
+        if (product == null || qty < 1 || user == null) {
             return "redirect:/customer/home";
         }
 
         List<CartItem> buyNowItems = List.of(new CartItem(product, qty));
+        double total = qty * product.getPrice();
+
         session.setAttribute("checkoutItems", buyNowItems);
+
+        if (product.getStock() < qty) {
+            model.addAttribute("error", "Không đủ hàng cho sản phẩm: " + product.getProductName());
+        }
 
         model.addAttribute("items", buyNowItems);
         model.addAttribute("user", user);
-        model.addAttribute("total", qty * product.getPrice());
+        model.addAttribute("total", total);
         return "confirm_order";
     }
 

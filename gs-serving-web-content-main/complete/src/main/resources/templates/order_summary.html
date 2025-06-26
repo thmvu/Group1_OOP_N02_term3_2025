@@ -14,10 +14,18 @@
     <div class="card mb-4">
         <div class="card-header bg-light fw-bold">📋 Thông tin khách hàng</div>
         <ul class="list-group list-group-flush">
-            <li class="list-group-item"><strong>Họ tên:</strong> <span th:text="${user.fullName ?: 'Không có'}">Họ tên</span></li>
-            <li class="list-group-item"><strong>Email:</strong> <span th:text="${user.email ?: 'Không có'}">Email</span></li>
-            <li class="list-group-item"><strong>SĐT:</strong> <span th:text="${user.phone ?: 'Không có'}">SĐT</span></li>
-            <li class="list-group-item"><strong>Địa chỉ:</strong> <span th:text="${user.address ?: 'Không có'}">Địa chỉ</span></li>
+            <li class="list-group-item">
+                <strong>Họ tên:</strong> <span th:text="${user.fullName ?: 'Không có'}">Họ tên</span>
+            </li>
+            <li class="list-group-item">
+                <strong>Email:</strong> <span th:text="${user.email ?: 'Không có'}">Email</span>
+            </li>
+            <li class="list-group-item">
+                <strong>SĐT:</strong> <span th:text="${user.phone ?: 'Không có'}">SĐT</span>
+            </li>
+            <li class="list-group-item">
+                <strong>Địa chỉ:</strong> <span th:text="${user.address ?: 'Không có'}">Địa chỉ</span>
+            </li>
         </ul>
     </div>
 
@@ -43,15 +51,15 @@
                 <tbody>
                     <tr th:each="item : ${items}">
                         <td th:text="${item.product.productName}">Tên SP</td>
-                        <td class="text-center" th:text="${item.quantity}">SL</td>
-                        <td th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Giá</td>
-                        <td th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Tổng</td>
+                        <td class="text-center" th:text="${item.quantity}">1</td>
+                        <td class="text-end" th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Giá</td>
+                        <td class="text-end" th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Tổng</td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr class="table-success fw-bold">
                         <td colspan="3" class="text-end">Tổng cộng:</td>
-                        <td th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Tổng cộng</td>
+                        <td class="text-end" th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Tổng cộng</td>
                     </tr>
                 </tfoot>
             </table>
@@ -60,7 +68,9 @@
 
     <!-- Nút quay lại -->
     <div class="mt-4 text-center">
-        <a href="/customer/home" class="btn btn-primary">🔙 Quay lại trang mua hàng</a>
+        <a href="/customer/home" class="btn btn-primary">
+            🔙 Quay lại trang mua hàng
+        </a>
     </div>
 </div>
 

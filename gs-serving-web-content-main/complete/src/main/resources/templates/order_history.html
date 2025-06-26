@@ -10,20 +10,27 @@
 <div class="container mt-5">
     <h2 class="mb-4 text-primary">🕒 Lịch sử đơn hàng</h2>
 
+    <!-- Nếu không có đơn hàng nào -->
     <div th:if="${orderHistory.size() == 0}">
         <div class="alert alert-info">Bạn chưa có đơn hàng nào.</div>
     </div>
 
+    <!-- Danh sách đơn hàng -->
     <div th:if="${orderHistory.size() > 0}">
         <div th:each="order, orderStat : ${orderHistory}" class="mb-5 border p-3 bg-white rounded shadow-sm">
-            <h5 class="mb-3 text-secondary">Đơn hàng #<span th:text="${orderStat.index + 1}"></span></h5>
-            <p><strong>Người nhận:</strong> <span th:text="${order.fullName}"></span></p>
-            <p><strong>Điện thoại:</strong> <span th:text="${order.phone}"></span></p>
-            <p><strong>Địa chỉ:</strong> <span th:text="${order.address}"></span></p>
-            <p><strong>Ngày đặt:</strong> <span th:text="${#dates.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></span></p>
+            <h5 class="mb-3 text-secondary">
+                📦 Đơn hàng #<span th:text="${orderStat.index + 1}">1</span>
+            </h5>
+            <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item"><strong>Người nhận:</strong> <span th:text="${order.fullName}">Người nhận</span></li>
+                <li class="list-group-item"><strong>Điện thoại:</strong> <span th:text="${order.phone}">SĐT</span></li>
+                <li class="list-group-item"><strong>Địa chỉ:</strong> <span th:text="${order.address}">Địa chỉ</span></li>
+                <li class="list-group-item"><strong>Ngày đặt:</strong> <span th:text="${#dates.format(order.orderDate, 'dd/MM/yyyy HH:mm')}">Ngày đặt</span></li>
+            </ul>
 
-            <table class="table table-bordered mt-3">
-                <thead class="table-light">
+            <!-- Bảng chi tiết sản phẩm -->
+            <table class="table table-bordered table-striped mt-3">
+                <thead class="table-light text-center">
                     <tr>
                         <th>Tên sản phẩm</th>
                         <th>Số lượng</th>
@@ -34,19 +41,23 @@
                 <tbody>
                     <tr th:each="item : ${order.items}">
                         <td th:text="${item.product.productName}">Tên SP</td>
-                        <td th:text="${item.quantity}">SL</td>
-                        <td th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Đơn giá</td>
-                        <td th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Thành tiền</td>
+                        <td class="text-center" th:text="${item.quantity}">1</td>
+                        <td class="text-end" th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">750,000 VNĐ</td>
+                        <td class="text-end" th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">750,000 VNĐ</td>
                     </tr>
                 </tbody>
             </table>
-            <div class="fw-bold mt-2">
-                Tổng cộng: <span th:text="${#numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+
+            <!-- Tổng cộng -->
+            <div class="fw-bold text-end mt-2">
+                🧾 Tổng cộng: 
+                <span th:text="${#numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0 VNĐ</span>
             </div>
         </div>
     </div>
 
-    <div class="text-center">
+    <!-- Nút quay lại -->
+    <div class="text-center mt-4">
         <a href="/customer/home" class="btn btn-dark">⬅️ Quay lại trang khách hàng</a>
     </div>
 </div>
