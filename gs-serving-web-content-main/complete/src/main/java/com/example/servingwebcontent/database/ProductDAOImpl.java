@@ -30,23 +30,24 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public boolean addProduct(Product product) {
-        String sql = "INSERT INTO products (product_id, seller_id, product_name, price, stock, description) VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection conn = aivenConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    String sql = "INSERT INTO products (seller_id, product_name, price, stock, description) VALUES (?, ?, ?, ?, ?)";
+    try (Connection conn = aivenConnection.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setInt(1, product.getProductId());
-            pstmt.setString(2, product.getSeller() != null ? product.getSeller().getUserID() : null);
-            pstmt.setString(3, product.getProductName());
-            pstmt.setDouble(4, product.getPrice());
-            pstmt.setInt(5, product.getStock());
-            pstmt.setString(6, product.getDescription());
+        // pstmt.setInt(1, product.getProductId()); ❌ bỏ dòng này
+        pstmt.setString(1, product.getSeller() != null ? product.getSeller().getUserID() : null);
+        pstmt.setString(2, product.getProductName());
+        pstmt.setDouble(3, product.getPrice());
+        pstmt.setInt(4, product.getStock());
+        pstmt.setString(5, product.getDescription());
 
-            return pstmt.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        return pstmt.executeUpdate() > 0;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
     }
+}
+
 
     @Override
     public boolean updateProduct(Product product) {
