@@ -4,12 +4,13 @@ package com.example.servingwebcontent.database;
 import com.example.servingwebcontent.database.aivenConnection;
 import com.example.servingwebcontent.model.Product;
 import com.example.servingwebcontent.model.Seller;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Repository
 public class ProductDAOImpl implements ProductDAO {
 
     @Override
