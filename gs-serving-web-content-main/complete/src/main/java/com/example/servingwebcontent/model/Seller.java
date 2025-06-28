@@ -2,7 +2,7 @@ package com.example.servingwebcontent.model;
 
 // Seller.java
 public class Seller extends User {
-    public Seller(String userID, String fullName, String gender, String dob,
+    public Seller(String userID, String fullName, String gender, java.time.LocalDate dob,
                   String phone, String email, String address, String password) {
         super(userID, fullName, gender, dob, phone, email, address, password, "seller");
     }
@@ -13,6 +13,11 @@ public class Seller extends User {
               user.getPhone(), user.getEmail(), user.getAddress(), user.getPassword(), "seller");
     }
 
+    
+    public Seller() {
+        super(); // gọi constructor rỗng của User
+    }
+    
     public void sell(String productName) {
         System.out.println(getFullName() + " da ban san pham: " + productName);
     }

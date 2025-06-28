@@ -1,11 +1,16 @@
 package com.example.servingwebcontent.database;
 
+
 import com.example.servingwebcontent.model.*;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
 public class InvoiceDAO {
+    
+    private final UserDAO userDAO = new UserDAOImpl();
+    private final ProductDAO productDAO = new ProductDAOImpl();
+
     public boolean addInvoice(Invoice invoice) {
         String sqlInvoice = "INSERT INTO invoices (invoice_id, customer_id, created_at, status) VALUES (?, ?, ?, ?)";
         String sqlItem = "INSERT INTO invoice_items (invoice_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
@@ -16,12 +21,14 @@ public class InvoiceDAO {
             try (PreparedStatement pstmtInvoice = conn.prepareStatement(sqlInvoice);
                  PreparedStatement pstmtItem = conn.prepareStatement(sqlItem)) {
 
+                // ✅ Thêm hóa đơn chính
                 pstmtInvoice.setString(1, invoice.getInvoiceId());
                 pstmtInvoice.setString(2, invoice.getCustomer().getUserID());
                 pstmtInvoice.setTimestamp(3, Timestamp.valueOf(invoice.getCreatedAt()));
                 pstmtInvoice.setString(4, invoice.getStatus());
                 pstmtInvoice.executeUpdate();
 
+                // ✅ Thêm các item của hóa đơn
                 for (InvoiceItem item : invoice.getItems()) {
                     pstmtItem.setString(1, invoice.getInvoiceId());
                     pstmtItem.setInt(2, item.getProduct().getProductId());
@@ -56,6 +63,9 @@ public class InvoiceDAO {
             while (rs.next()) {
                 Invoice invoice = extractInvoice(rs);
                 invoice.setItems(getItemsByInvoiceId(invoice.getInvoiceId()));
+                invoice.setTotalAmount(
+                    invoice.getItems().stream().mapToDouble(InvoiceItem::getTotalPrice).sum()
+                );
                 list.add(invoice);
             }
 
@@ -77,6 +87,9 @@ public class InvoiceDAO {
             if (rs.next()) {
                 Invoice invoice = extractInvoice(rs);
                 invoice.setItems(getItemsByInvoiceId(invoiceId));
+                invoice.setTotalAmount(
+                    invoice.getItems().stream().mapToDouble(InvoiceItem::getTotalPrice).sum()
+                );
                 return invoice;
             }
 
@@ -99,6 +112,9 @@ public class InvoiceDAO {
             while (rs.next()) {
                 Invoice invoice = extractInvoice(rs);
                 invoice.setItems(getItemsByInvoiceId(invoice.getInvoiceId()));
+                invoice.setTotalAmount(
+                    invoice.getItems().stream().mapToDouble(InvoiceItem::getTotalPrice).sum()
+                );
                 list.add(invoice);
             }
 
@@ -119,16 +135,14 @@ public class InvoiceDAO {
             pstmt.setString(1, invoiceId);
             ResultSet rs = pstmt.executeQuery();
 
-            ProductDAO productDAO = new ProductDAOImpl();
-
             while (rs.next()) {
                 int productId = rs.getInt("product_id");
                 int quantity = rs.getInt("quantity");
                 double unitPrice = rs.getDouble("unit_price");
 
                 Product product = productDAO.getProductById(productId);
-
-                items.add(new InvoiceItem(null, product, quantity, unitPrice));
+                InvoiceItem item = new InvoiceItem(null, product, quantity, unitPrice);
+                items.add(item);
             }
 
         } catch (Exception e) {
@@ -144,8 +158,12 @@ public class InvoiceDAO {
         LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
         String status = rs.getString("status");
 
-        UserDAO userDAO = new UserDAOImpl();
-        Customer customer = (Customer) userDAO.getUserById(customerId);
+        // ⚠️ Chuyển đổi từ User sang Customer an toàn
+        User u = userDAO.getUserById(customerId);
+        Customer customer = new Customer(
+            u.getUserID(), u.getFullName(), u.getGender(), u.getDob(),
+            u.getPhone(), u.getEmail(), u.getAddress(), u.getPassword()
+        );
 
         return new Invoice(invoiceId, customer, createdAt, status);
     }

@@ -1,7 +1,6 @@
 package com.example.servingwebcontent.database;
 
 
-import com.example.servingwebcontent.database.aivenConnection;
 import com.example.servingwebcontent.model.Product;
 import com.example.servingwebcontent.model.Seller;
 import org.springframework.stereotype.Repository;
@@ -31,24 +30,22 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public boolean addProduct(Product product) {
-    String sql = "INSERT INTO products (seller_id, product_name, price, stock, description) VALUES (?, ?, ?, ?, ?)";
-    try (Connection conn = aivenConnection.getConnection();
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        String sql = "INSERT INTO products (seller_id, product_name, price, stock, description) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = aivenConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-        // pstmt.setInt(1, product.getProductId()); ❌ bỏ dòng này
-        pstmt.setString(1, product.getSeller() != null ? product.getSeller().getUserID() : null);
-        pstmt.setString(2, product.getProductName());
-        pstmt.setDouble(3, product.getPrice());
-        pstmt.setInt(4, product.getStock());
-        pstmt.setString(5, product.getDescription());
+            pstmt.setString(1, product.getSeller() != null ? product.getSeller().getUserID() : null);
+            pstmt.setString(2, product.getProductName());
+            pstmt.setDouble(3, product.getPrice());
+            pstmt.setInt(4, product.getStock());
+            pstmt.setString(5, product.getDescription());
 
-        return pstmt.executeUpdate() > 0;
-    } catch (Exception e) {
-        e.printStackTrace();
-        return false;
+            return pstmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
-
 
     @Override
     public boolean updateProduct(Product product) {
@@ -117,15 +114,16 @@ public class ProductDAOImpl implements ProductDAO {
         return products;
     }
 
-    // 🧠 Hàm phụ ánh xạ ResultSet thành Product object
+    // 🔧 Hàm ánh xạ từ ResultSet sang Product
     private Product mapResultSetToProduct(ResultSet rs) throws SQLException {
         Product p = new Product();
         p.setProductId(rs.getInt("product_id"));
 
+        // Ánh xạ seller_id sang Seller chỉ cần ID (tối ưu)
         String sellerId = rs.getString("seller_id");
         if (sellerId != null) {
-            Seller s = new Seller(sellerId, sellerId, sellerId, sellerId, sellerId, sellerId, sellerId, sellerId);
-            s.setUserID(sellerId); // chỉ set ID, chưa lấy full user
+            Seller s = new Seller();
+            s.setUserID(sellerId);
             p.setSeller(s);
         }
 
@@ -133,6 +131,7 @@ public class ProductDAOImpl implements ProductDAO {
         p.setPrice(rs.getDouble("price"));
         p.setStock(rs.getInt("stock"));
         p.setDescription(rs.getString("description"));
+
         return p;
     }
 }

@@ -1,24 +1,25 @@
 package com.example.servingwebcontent.model;
 
+import java.time.LocalDate;
 
 // User.java
 public class User {
     private String userID;
     private String fullName;
     private String gender;
-    private String dob;
+    private LocalDate dob;
     private String phone;
     private String email;
     private String address;
     private String password;
     private String role;
 
-   public User(String userID, String fullName, String gender, String dob,
+   public User(String userID, String fullName, String gender, LocalDate dob2,
             String phone, String email, String address, String password, String role) {
     this.userID = userID;
     this.fullName = fullName;
     this.gender = gender;
-    this.dob = dob;
+    this.dob = dob2;
     this.phone = phone;
     this.email = email;
     this.address = address;
@@ -29,7 +30,7 @@ public class User {
         this.userID = "";
         this.fullName = "";
         this.gender = "";
-        this.dob = "";
+        this.dob = null;
         this.phone = "";
         this.email = "";
         this.address = "";
@@ -47,8 +48,13 @@ public class User {
     public String getGender() { return gender; }
     public void setGender(String gender) { this.gender = gender; }
 
-    public String getDob() { return dob; }
-    public void setDob(String dob) { this.dob = dob; }
+    public LocalDate getDob() { return dob; }
+    public void setDob(String dob) { 
+        this.dob = LocalDate.parse(dob); 
+    }
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
+    }
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }

@@ -41,6 +41,7 @@
 <body class="bg-light">
 
 <div class="container mt-4">
+
     <!-- Banner trượt -->
     <div id="mainCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
         <div class="carousel-inner">
@@ -62,30 +63,30 @@
         </button>
     </div>
 
-   <!-- Thêm gần nút Đăng xuất -->
+    <!-- Tiêu đề và điều hướng -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Chào mừng bạn đến với cửa hàng!</h2>
         <div class="d-flex gap-2">
-        <a href="/cart/view" class="btn btn-outline-success">🛒 Xem giỏ hàng</a>
-        <a th:href="@{/customer/orders}">Xem lịch sử đơn hàng</a>
-        <a href="/customer/home" class="btn btn-primary">Trang chủ</a>
-        <a href="/customer/profile" class="btn btn-secondary">Thông tin cá nhân</a>
-        <a href="/logout" class="btn btn-danger">Đăng xuất</a>
+            <a href="/cart/view" class="btn btn-outline-success">🛒 Xem giỏ hàng</a>
+            <a href="/customer/orders" class="btn btn-outline-secondary">🕓 Lịch sử đơn hàng</a>
+            <a href="/customer/home" class="btn btn-primary">Trang chủ</a>
+            <a href="/customer/profile" class="btn btn-secondary">Thông tin cá nhân</a>
+            <a href="/logout" class="btn btn-danger">Đăng xuất</a>
         </div>
     </div>
-    
 
-    <!-- Danh mục -->
+    <!-- Danh mục sản phẩm -->
     <div class="mb-4">
         <h4 class="mb-3">Danh mục sản phẩm</h4>
         <div class="d-flex gap-4 flex-wrap">
-            <a th:href="@{/customer/home?category=den}" class="btn btn-outline-info"> Đồ công nghệ </a>
-            <a th:href="@{/customer/home?category=phongkhach}" class="btn btn-outline-info"> Làm đẹp </a>
-            <a th:href="@{/customer/home?category=phongngu}" class="btn btn-outline-info"> Đồ gia dụng </a>
+            <a th:href="@{/customer/home?category=den}" class="btn btn-outline-info">Đồ công nghệ</a>
+            <a th:href="@{/customer/home?category=phongkhach}" class="btn btn-outline-info">Làm đẹp</a>
+            <a th:href="@{/customer/home?category=phongngu}" class="btn btn-outline-info">Đồ gia dụng</a>
             <a th:href="@{/customer/home}" class="btn btn-outline-secondary">Tất cả</a>
         </div>
     </div>
-      <!-- Tài khoản -->
+
+    <!-- Dropdown tài khoản -->
     <div class="dropdown text-end mb-4">
         <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
             Tài khoản
@@ -97,7 +98,7 @@
         </ul>
     </div>
 
-    <!-- Form tìm kiếm đơn giản -->
+    <!-- Form tìm kiếm -->
     <form class="row mb-3" method="get" action="/customer/home">
         <div class="col-md-10">
             <input type="text" class="form-control" name="keyword" th:value="${keyword}" placeholder="Tìm sản phẩm...">
@@ -107,35 +108,25 @@
         </div>
     </form>
 
-    <!-- Menu điều hướng -->
-    <div class="mb-4">
-        <a href="/products" class="btn btn-outline-primary">Xem tất cả sản phẩm</a>
-        <a href="/order/history" class="btn btn-outline-secondary ms-2">🕓 Xem lịch sử đơn hàng</a>
-    </div>
-
     <!-- Danh sách sản phẩm -->
     <div class="row row-cols-1 row-cols-md-3 g-4" th:if="${products != null}">
         <div class="col" th:each="product : ${products}">
             <div class="card h-100 shadow-sm">
-                <!-- Nếu có ảnh -->
-                <img th:if="${product.imageUrl != null}"
-                     th:src="@{'/images/' + ${product.imageUrl}}"
+                <!-- Ảnh -->
+                <img th:src="${product.imageUrl != null} ? @{'/images/' + ${product.imageUrl}} : @{'/images/default.jpg'}"
                      class="card-img-top"
                      th:alt="${product.productName}" />
 
-                <!-- Nếu không có ảnh -->
-                <img th:unless="${product.imageUrl != null}"
-                     th:src="@{'/images/default.jpg'}"
-                     class="card-img-top"
-                     th:alt="${product.productName}" />
-
+                <!-- Nội dung -->
                 <div class="card-body">
                     <h5 class="card-title fw-bold text-dark" th:text="${product.productName}">Tên sản phẩm</h5>
                     <p class="card-text" th:text="${product.description}">Mô tả</p>
                 </div>
+
+                <!-- Footer -->
                 <div class="card-footer d-flex justify-content-between align-items-center">
                     <span class="text-success fw-bold" th:text="${product.price} + ' VNĐ'">0 VNĐ</span>
-                   <form method="post" th:action="@{/cart/add}" class="d-inline">
+                    <form method="post" th:action="@{/cart/add}" class="d-inline">
                         <input type="hidden" name="productId" th:value="${product.productId}" />
                         <button type="submit" class="btn btn-sm btn-primary">Thêm vào giỏ</button>
                     </form>

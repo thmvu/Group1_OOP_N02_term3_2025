@@ -141,7 +141,20 @@
 
         // Tạo hóa đơn
         String invoiceId = UUID.randomUUID().toString().substring(0, 8);
-        Invoice invoice = new Invoice(invoiceId, (Customer) user, LocalDateTime.now(), "CONFIRMED");
+        Customer customer = new Customer(
+        user.getUserID(),
+        user.getFullName(),
+        user.getGender(),
+        user.getDob(),
+        user.getPhone(),
+        user.getEmail(),
+        user.getAddress(),
+        user.getPassword()
+        
+    );
+
+    Invoice invoice = new Invoice(invoiceId, customer, LocalDateTime.now(), "CONFIRMED");
+
 
         for (CartItem item : checkoutItems) {
             InvoiceItem invoiceItem = new InvoiceItem(invoice, item.getProduct(), item.getQuantity(), item.getProduct().getPrice());
@@ -167,19 +180,28 @@
         return "order_summary";
         }
         @GetMapping("/customer/orders")
-        public String viewOrderHistory(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
+    public String viewOrderHistory(HttpSession session, Model model) {
+    User user = (User) session.getAttribute("user");
 
-        if (user == null || !"customer".equalsIgnoreCase(user.getRole())) {
-            return "redirect:/login";
-        }
-
-        InvoiceDAO invoiceDAO = new InvoiceDAO();
-        List<Invoice> invoices = invoiceDAO.getInvoicesByCustomerId(user.getUserID());
-
-        model.addAttribute("user", user);
-        model.addAttribute("invoices", invoices);
-
-        return "redirect:/order/history";
-        }
+    if (user == null || !"customer".equalsIgnoreCase(user.getRole())) {
+        return "redirect:/login";
     }
+
+    InvoiceDAO invoiceDAO = new InvoiceDAO();
+    List<Invoice> invoices = invoiceDAO.getInvoicesByCustomerId(user.getUserID());
+
+    // ➕ Tính tổng tiền từng hóa đơn
+    for (Invoice invoice : invoices) {
+        double total = invoice.getItems().stream()
+                        .mapToDouble(InvoiceItem::getTotalPrice)
+                        .sum();
+        invoice.setTotalAmount(total);
+    }
+
+    model.addAttribute("user", user);
+    model.addAttribute("invoices", invoices);
+
+    return "order_history";
+    }
+
+}

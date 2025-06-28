@@ -4,57 +4,89 @@
     <meta charset="UTF-8">
     <title>Đặt hàng thành công</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(145deg, #f0f4ff, #e0eaff);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.75);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .badge-status {
+            font-size: 0.9rem;
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+
+        .summary-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .icon-success {
+            font-size: 3rem;
+            color: #28a745;
+        }
+    </style>
 </head>
-<body class="bg-light">
-<div class="container mt-5">
-    <div class="alert alert-success text-center">
-        <h3>🎉 Đặt hàng thành công!</h3>
-        <p>Cảm ơn bạn đã mua sắm tại cửa hàng của chúng tôi.</p>
+<body class="p-4">
+<div class="container glass p-5 mt-5">
+    <div class="text-center mb-4">
+        <div class="icon-success">✅</div>
+        <div class="summary-title">Đặt hàng thành công!</div>
+        <p class="text-muted">Cảm ơn bạn đã mua sắm tại hệ thống của chúng tôi.</p>
     </div>
 
-    <div class="card mb-4 shadow-sm">
-        <div class="card-header bg-success text-white">
-            <strong>Mã đơn hàng:</strong> <span th:text="${invoiceId}">ABC12345</span>
-        </div>
-        <div class="card-body">
-            <h5>📦 Thông tin người nhận</h5>
-            <ul class="list-unstyled mb-4">
-                <li><strong>👤 Tên:</strong> <span th:text="${user.fullName}">Nguyễn Văn A</span></li>
-                <li><strong>📞 Điện thoại:</strong> <span th:text="${user.phone}">0123456789</span></li>
-                <li><strong>🏠 Địa chỉ:</strong> <span th:text="${user.address}">123 Đường ABC</span></li>
-                <li><strong>📝 Ghi chú:</strong> <span th:text="${note}">Không có</span></li>
-            </ul>
-
-            <h5>🛍️ Danh sách sản phẩm</h5>
-            <table class="table table-bordered table-hover">
-                <thead class="table-light">
-                    <tr>
-                        <th>Sản phẩm</th>
-                        <th>Số lượng</th>
-                        <th>Đơn giá</th>
-                        <th>Thành tiền</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="item : ${items}">
-                        <td th:text="${item.product.productName}">Sản phẩm A</td>
-                        <td th:text="${item.quantity}">1</td>
-                        <td th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000 đ</td>
-                        <td th:text="${#numbers.formatDecimal(item.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000 đ</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="text-end fs-5 fw-bold mt-3">
-                Tổng cộng: 
-                <span th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
-            </div>
-        </div>
+    <div class="mb-4">
+        <h5>🧾 Thông tin đơn hàng</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Mã hóa đơn: <strong th:text="${invoiceId}">INV123456</strong></li>
+            <li class="list-group-item">Tên khách hàng: <strong th:text="${user.fullName}">Nguyễn Văn A</strong></li>
+            <li class="list-group-item">SĐT: <strong th:text="${user.phone}">0123456789</strong></li>
+            <li class="list-group-item">Địa chỉ: <strong th:text="${user.address}">123 Đường ABC</strong></li>
+            <li class="list-group-item">Ghi chú: <em th:text="${note}">Không có</em></li>
+            <li class="list-group-item">Trạng thái: <span class="badge-status" th:text="'✅ ' + ${'Đã xác nhận'}"></span></li>
+        </ul>
     </div>
 
-    <div class="text-center">
-        <a href="/customer/orders" class="btn btn-outline-primary">📃 Xem lịch sử đơn hàng</a>
-        <a href="/customer/home" class="btn btn-secondary ms-2">← Tiếp tục mua hàng</a>
+    <div>
+        <h5>📦 Danh sách sản phẩm</h5>
+        <table class="table table-hover mt-3">
+            <thead class="table-light">
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${items}">
+                    <td th:text="${item.product.productName}">Sản phẩm A</td>
+                    <td th:text="${item.quantity}">2</td>
+                    <td th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000 đ</td>
+                    <td th:text="${#numbers.formatDecimal(item.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">200.000 đ</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-end fs-5 fw-bold">
+        Tổng tiền: <span th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="/customer/home" class="btn btn-primary px-4 me-2">🏠 Về trang chính</a>
+        <a href="/customer/orders" class="btn btn-outline-secondary">📜 Xem lịch sử đơn hàng</a>
     </div>
 </div>
 </body>
