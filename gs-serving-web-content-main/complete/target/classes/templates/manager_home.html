@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Trang Quản Lý</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #dfe9f3, #ffffff);
+    }
+
+    .glass-box {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 1rem;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .stat-box {
+      text-align: center;
+      padding: 1rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(8px);
+      color: #000;
+      font-weight: 600;
+      margin: 0.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+<header class="bg-white py-3 shadow-sm">
+  <div class="container d-flex justify-content-between align-items-center">
+    <h2 class="mb-0">📦 Hệ thống quản lý kho</h2>
+    <a href="/logout" class="btn btn-outline-primary">Đăng xuất</a>
+  </div>
+</header>
+
+<main class="container mt-5">
+  <div class="text-center mb-5">
+    <h3 class="fw-bold">Tổng Quan</h3>
+    <p class="text-muted">Thống kê nhanh các thành phần hệ thống</p>
+  </div>
+
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10 glass-box">
+      <div class="row">
+        <div class="col-md-2 stat-box bg-primary" th:each="stat : ${statistics}">
+          <div th:text="${stat[0]}">Tên</div>
+          <h3 th:text="${stat[1]}">0</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USER TABLE -->
+  <div class="row mb-4">
+    <div class="col-md-12 glass-box">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Danh sách người dùng</h4>
+        <button class="btn btn-sm btn-success" onclick="openUserModal()">+ Thêm</button>
+      </div>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Họ tên</th>
+          <th>Email</th>
+          <th>Vai trò</th>
+          <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+          <td th:text="${user.userID}"></td>
+          <td th:text="${user.fullName}"></td>
+          <td th:text="${user.email}"></td>
+          <td th:text="${user.role}"></td>
+          <td>
+            <button class="btn btn-sm btn-warning edit-user-btn"
+                    th:attr="data-id=${user.userID},
+                             data-name=${user.fullName},
+                             data-email=${user.email},
+                             data-role=${user.role}">
+              Sửa
+            </button>
+            <a th:href="@{'/manager/users/delete/' + ${user.userID}}" class="btn btn-sm btn-danger" onclick="return confirm('Xoá người dùng này?');">Xoá</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PRODUCT TABLE -->
+  <div class="row mb-5">
+    <div class="col-md-12 glass-box">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Danh sách sản phẩm</h4>
+        <button class="btn btn-sm btn-success" onclick="openProductModal()">+ Thêm</button>
+      </div>
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Tên sản phẩm</th>
+          <th>Giá</th>
+          <th>Tồn kho</th>
+          <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+          <td th:text="${product.productId}"></td>
+          <td th:text="${product.productName}"></td>
+          <td th:text="${product.price}"></td>
+          <td th:text="${product.stock}"></td>
+          <td>
+            <button class="btn btn-sm btn-warning edit-product-btn"
+                    th:attr="data-id=${product.productId},
+                             data-name=${product.productName},
+                             data-price=${product.price},
+                             data-stock=${product.stock}">
+              Sửa
+            </button>
+            <a th:href="@{'/manager/products/delete/' + ${product.productId}}" class="btn btn-sm btn-danger" onclick="return confirm('Xoá sản phẩm này?');">Xoá</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- USER MODAL -->
+<div class="modal fade" id="userModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content glass-box">
+      <form method="post" th:action="@{/manager/users/save}">
+        <div class="modal-header">
+          <h5 class="modal-title">Thêm/Sửa Người Dùng</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="userID" id="userID">
+
+          <input type="text" name="fullName" class="form-control mb-2" id="fullName" placeholder="Họ tên" required>
+          <input type="email" name="email" class="form-control mb-2" id="email" placeholder="Email" required>
+          <input type="password" name="password" class="form-control mb-2" id="password" placeholder="Mật khẩu" required>
+          
+          <select name="gender" class="form-control mb-2" id="gender">
+            <option value="">-- Giới tính --</option>
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+            <option value="Khác">Khác</option>
+          </select>
+
+          <input type="date" name="dob" class="form-control mb-2" id="dob" placeholder="Ngày sinh">
+          <input type="text" name="phone" class="form-control mb-2" id="phone" placeholder="Số điện thoại">
+          <input type="text" name="address" class="form-control mb-2" id="address" placeholder="Địa chỉ">
+
+          <select name="role" id="role" class="form-control">
+            <option value="CUSTOMER">Customer</option>
+            <option value="SELLER">Seller</option>
+            <option value="MANAGER">Manager</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Lưu</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal fade" id="productModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content glass-box">
+      <form method="post" th:action="@{/manager/products/save}">
+        <div class="modal-header">
+          <h5 class="modal-title">Thêm/Sửa Sản Phẩm</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="productId" id="productId">
+          <input type="text" name="productName" id="productName" class="form-control mb-2" placeholder="Tên sản phẩm">
+          <input type="number" name="price" id="price" class="form-control mb-2" placeholder="Giá">
+          <input type="number" name="stock" id="stock" class="form-control mb-2" placeholder="Tồn kho">
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Lưu</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Modal Scripts -->
+<script>
+  function openUserModal(id = '', name = '', email = '', role = 'customer') {
+    document.getElementById('userID').value = id;
+    document.getElementById('fullName').value = name;
+    document.getElementById('email').value = email;
+    document.getElementById('role').value = role;
+    new bootstrap.Modal(document.getElementById('userModal')).show();
+  }
+
+  function openProductModal(id = '', name = '', price = '', stock = '') {
+    document.getElementById('productId').value = id;
+    document.getElementById('productName').value = name;
+    document.getElementById('price').value = price;
+    document.getElementById('stock').value = stock;
+    new bootstrap.Modal(document.getElementById('productModal')).show();
+  }
+
+  // Gắn sự kiện click cho nút sửa
+  document.querySelectorAll('.edit-user-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      openUserModal(this.dataset.id, this.dataset.name, this.dataset.email, this.dataset.role);
+    });
+  });
+
+  document.querySelectorAll('.edit-product-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      openProductModal(this.dataset.id, this.dataset.name, this.dataset.price, this.dataset.stock);
+    });
+  });
+</script>
+</body>
+</html>

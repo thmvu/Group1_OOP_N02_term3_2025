@@ -67,6 +67,9 @@
         <h2>Chào mừng bạn đến với cửa hàng!</h2>
         <div class="d-flex gap-2">
         <a href="/cart/view" class="btn btn-outline-success">🛒 Xem giỏ hàng</a>
+        <a th:href="@{/customer/orders}">Xem lịch sử đơn hàng</a>
+        <a href="/customer/home" class="btn btn-primary">Trang chủ</a>
+        <a href="/customer/profile" class="btn btn-secondary">Thông tin cá nhân</a>
         <a href="/logout" class="btn btn-danger">Đăng xuất</a>
         </div>
     </div>
@@ -76,11 +79,38 @@
     <div class="mb-4">
         <h4 class="mb-3">Danh mục sản phẩm</h4>
         <div class="d-flex gap-4 flex-wrap">
-            <a th:href="@{/customer/home?category=den}" class="btn btn-outline-info"> Đèn trang trí </a>
-            <a th:href="@{/customer/home?category=phongkhach}" class="btn btn-outline-info"> Nội thất phòng khách </a>
-            <a th:href="@{/customer/home?category=phongngu}" class="btn btn-outline-info"> Nội thất phòng ngủ </a>
+            <a th:href="@{/customer/home?category=den}" class="btn btn-outline-info"> Đồ công nghệ </a>
+            <a th:href="@{/customer/home?category=phongkhach}" class="btn btn-outline-info"> Làm đẹp </a>
+            <a th:href="@{/customer/home?category=phongngu}" class="btn btn-outline-info"> Đồ gia dụng </a>
             <a th:href="@{/customer/home}" class="btn btn-outline-secondary">Tất cả</a>
         </div>
+    </div>
+      <!-- Tài khoản -->
+    <div class="dropdown text-end mb-4">
+        <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            Tài khoản
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#infoModal">Xem thông tin</a></li>
+            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#updateModal">Cập nhật thông tin</a></li>
+            <li><a class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
+        </ul>
+    </div>
+
+    <!-- Form tìm kiếm đơn giản -->
+    <form class="row mb-3" method="get" action="/customer/home">
+        <div class="col-md-10">
+            <input type="text" class="form-control" name="keyword" th:value="${keyword}" placeholder="Tìm sản phẩm...">
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-outline-success w-100" type="submit">🔍 Tìm</button>
+        </div>
+    </form>
+
+    <!-- Menu điều hướng -->
+    <div class="mb-4">
+        <a href="/products" class="btn btn-outline-primary">Xem tất cả sản phẩm</a>
+        <a href="/order/history" class="btn btn-outline-secondary ms-2">🕓 Xem lịch sử đơn hàng</a>
     </div>
 
     <!-- Danh sách sản phẩm -->

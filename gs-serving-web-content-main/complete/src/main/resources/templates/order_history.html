@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch sử đơn hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <h2 class="mb-4">🕓 Lịch sử đơn hàng</h2>
+    <a href="/customer/home" class="btn btn-secondary mb-3">← Quay lại trang chính</a>
+
+    <div th:if="${invoices != null and !invoices.isEmpty()}">
+        <div th:each="invoice : ${invoices}" class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <strong>Mã đơn: </strong><span th:text="${invoice.invoiceId}"></span>
+                <span class="float-end"><strong>Ngày:</strong> <span th:text="${#temporals.format(invoice.createdAt, 'dd/MM/yyyy HH:mm')}"></span></span>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Giá</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${invoice.items}">
+                            <td th:text="${item.product.productId}">SP001</td>
+                            <td th:text="${item.quantity}">1</td>
+                            <td th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000 đ</td>
+                            <td th:text="${#numbers.formatDecimal(item.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000 đ</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-end fw-bold">
+                    Tổng cộng:
+                    <span th:text="${#numbers.formatDecimal(invoice.items.stream().mapToDouble(i -> i.totalPrice).sum(), 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <strong>Trạng thái: </strong><span class="text-success" th:text="${invoice.status}">CONFIRMED</span>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${invoices == null || invoices.isEmpty()}" class="alert alert-info">
+        Bạn chưa có đơn hàng nào.
+    </div>
+</div>
+</body>
+</html>

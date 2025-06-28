@@ -1,11 +1,9 @@
 package com.example.servingwebcontent.database;
 
 import com.example.servingwebcontent.model.*;
-
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
-
 
 public class InvoiceDAO {
     public boolean addInvoice(Invoice invoice) {
@@ -13,19 +11,17 @@ public class InvoiceDAO {
         String sqlItem = "INSERT INTO invoice_items (invoice_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = aivenConnection.getConnection()) {
-            conn.setAutoCommit(false); // Bắt đầu giao dịch
+            conn.setAutoCommit(false);
 
             try (PreparedStatement pstmtInvoice = conn.prepareStatement(sqlInvoice);
                  PreparedStatement pstmtItem = conn.prepareStatement(sqlItem)) {
 
-                // Thêm invoice
                 pstmtInvoice.setString(1, invoice.getInvoiceId());
                 pstmtInvoice.setString(2, invoice.getCustomer().getUserID());
                 pstmtInvoice.setTimestamp(3, Timestamp.valueOf(invoice.getCreatedAt()));
                 pstmtInvoice.setString(4, invoice.getStatus());
                 pstmtInvoice.executeUpdate();
 
-                // Thêm các invoice_items
                 for (InvoiceItem item : invoice.getItems()) {
                     pstmtItem.setString(1, invoice.getInvoiceId());
                     pstmtItem.setInt(2, item.getProduct().getProductId());
@@ -119,19 +115,20 @@ public class InvoiceDAO {
 
         try (Connection conn = aivenConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
             pstmt.setString(1, invoiceId);
             ResultSet rs = pstmt.executeQuery();
+
+            ProductDAO productDAO = new ProductDAOImpl();
 
             while (rs.next()) {
                 int productId = rs.getInt("product_id");
                 int quantity = rs.getInt("quantity");
                 double unitPrice = rs.getDouble("unit_price");
 
-                Product product = new Product();
-                product.setProductId(productId);
+                Product product = productDAO.getProductById(productId);
 
-                Invoice invoice = new Invoice(invoiceId, null, null, null); // đơn giản
-                items.add(new InvoiceItem(invoice, product, quantity, unitPrice));
+                items.add(new InvoiceItem(null, product, quantity, unitPrice));
             }
 
         } catch (Exception e) {
@@ -147,8 +144,8 @@ public class InvoiceDAO {
         LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
         String status = rs.getString("status");
 
-        Customer customer = new Customer();
-        customer.setUserID(customerId);
+        UserDAO userDAO = new UserDAOImpl();
+        Customer customer = (Customer) userDAO.getUserById(customerId);
 
         return new Invoice(invoiceId, customer, createdAt, status);
     }
