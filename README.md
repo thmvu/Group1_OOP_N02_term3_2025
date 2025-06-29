@@ -1,105 +1,166 @@
-## HỆ THỐNG QUẢN LÝ KHO HÀNG 
+# 📦 HỆ THỐNG QUẢN LÝ KHO HÀNG - STORAGE MANAGEMENT SYSTEM
 
-# Giới thiệu 
-Xây dụng ứng dụng : Quản Lý Kho Hàng (Storage Management)
+## 🧩 Giới thiệu
 
-## Thành viên
-Từ Hữu Minh Vũ 
-Nguyễn Hữu Tình
-Vũ Viết Tuấn
-# Đối tượng Quản Lý Kho Hàng
-## Mô tả
+Đây là một ứng dụng web xây dựng bằng **Java Spring Boot** hỗ trợ quản lý kho hàng cho doanh nghiệp vừa và nhỏ. Hệ thống phân vai trò người dùng (Customer, Seller, Manager), hỗ trợ xử lý hàng hóa, hóa đơn và các tác vụ nghiệp vụ liên quan.
 
-```
+---
 
-Hàng hóa (Product)
-+Thiết bị (Device)
+## 👨‍💻 Nhóm phát triển
 
-Người dùng (User)
-+Khách hàng (Customer)
-+Nhân viên(seller)
-+Quản lí(Manager)
+- **Từ Hữu Minh Vũ**  
+- **Nguyễn Hữu Tình**  
+- **Vũ Viết Tuấn**
 
-Thiết bị và Người dùng (Device-User)
+---
 
+## 🏗️ Kiến trúc hệ thống
 
-```
+### Các thực thể chính:
 
-## Xây dựng Class 
+| Class        | Vai trò                                                            |
+|--------------|---------------------------------------------------------------------|
+| `User`       | Lớp cơ sở của tất cả người dùng: `Customer`, `Seller`, `Manager`  |
+| `Customer`   | Người mua, có thể đặt hàng và xem lịch sử mua                      |
+| `Seller`     | Người bán sản phẩm, quản lý sản phẩm của họ                        |
+| `Manager`    | Quản trị viên, có quyền quản lý toàn bộ người dùng và hàng hóa     |
+| `Product`    | Sản phẩm trong kho, thuộc sở hữu của một `Seller`                 |
+| `Invoice`    | Hóa đơn mua hàng của `Customer`, lưu thông tin đơn hàng và trạng thái |
+| `InvoiceItem`| Chi tiết từng sản phẩm trong hóa đơn                              |
 
-Thiết bị
+---
 
-```
-class Sanpham{
-   //tat ca thông tin miêu tả thiết bị
+## 🧱 Mô hình lớp tiêu biểu
 
-int maThietBi;
-
-String tên thiết bị
-}
+### `User.java` (trừu tượng người dùng)
 
 ```
-
-Người dùng 
-```
-
-class Nguoidung{
-
-   int maNguoiDung;
-   String tenNguoiDung;
-
-   //cac thong tin mo ta nguoi
-
-
+public class User {
+    private String userID, fullName, gender, phone, email, address, password, role;
+    private LocalDate dob;
+    
+    public boolean login(String username, String password) {
+        return (username.equals(phone) || username.equals(email)) && this.password.equals(password);
+    }
 }
 ```
-
-Thiết bị người dùng
+**trong đấy có các đối tượng chia theo role**
+- Manager
+- Seller
+- Customer
+### `Product.java` (trừu tượng hàng hóa)
 
 ```
-class thietbi_nguoidung{
-
-   int maThietBi;
-   int maNguoiDung;
+public class Product {
+    private Integer productId;
+    private Seller seller;
+    private String productName, description, imageUrl;
+    private double price;
+    private int stock;
+    
+    public void updateStock(int quantitySold) { ... }
 }
-
+```
+### `Invoice.java` (trừu tượng hóa đơn)
 
 ```
-# Yêu cầu(Request)
-- Giao diện Java Spring Boot.
-- Có chức năng quản lý Kho Hàng
-# Phương thức hoạt động (Operations)
-
+public class Invoice {
+    private String invoiceId;
+    private Customer customer;
+    private LocalDateTime createdAt;
+    private List<InvoiceItem> items;
+    private String status;
+    private double totalAmount;
+}
 ```
- Thêm, sửa, xóa hàng hóa
+###⚙️ Tính năng hệ thống
+##👨‍⚖️ Phân quyền
+Customer: đăng nhập, mua hàng, xem hóa đơn
 
-+ Liệt kê thông tin về hàng hóa trong kho, có thể lọc ra các sản phẩm theo phân loại sản phẩm
-- Có chức năng quản lý hàng hóa, người dùng ,....
+Seller: đăng nhập, quản lý sản phẩm của mình
 
-+ Thêm, sửa, xóa người dùng.
-- Có chức năng gán sản phẩm cho người dùng. 
+Manager: toàn quyền quản lý người dùng, sản phẩm và hóa đơn
 
-- Dữ liệu được lưu trữ xuống file nhị phân
+##📦 Quản lý sản phẩm
+Thêm / sửa / xóa sản phẩm
 
-+ Cần tạo các lớp liên quan đến sản phẩm, người dùng, và thietbi_nguoidung để đọc, ghi xuống 1 hay nhiều file.
+Gán sản phẩm cho người bán (seller)
 
-- Khi làm việc với dữ liệu trong bộ nhớ, dữ liệu cần được lưu trữ dưới dạng các Collection tùy chọn như ArrayList, LinkedList, Map, ....
+Tìm kiếm sản phẩm theo từ khóa
 
-- Sinh viên có thể thêm các chức năng vào chương trình để ứng dụng phong phú hơn bằng cách thêm các nghiệp vụ cho bài toán (tùy chọn)
+Hiển thị hình ảnh, mô tả, số lượng, giá
 
+##👥 Quản lý người dùng
+Thêm / sửa / xóa Customer, Seller, Manager
 
+Xem danh sách người dùng và vai trò
 
-```
+Tìm kiếm người dùng theo tên, email
 
-```
+##🧾 Quản lý hóa đơn
+Tạo hóa đơn khi khách hàng đặt hàng
 
-```
+Hiển thị các hóa đơn theo trạng thái
+
+Xem chi tiết từng đơn hàng
+
+Quản lý lịch sử giao dịch
+
+##💾 Lưu trữ
+Dữ liệu có thể lưu trong CSDL MySQL hoặc file nhị phân
+
+Trong bộ nhớ sử dụng: ArrayList, Map, LinkedList, ...
+
+Có thể chuyển hóa sang dùng JPA nếu cần mở rộng quy mô
+
+##🖥️ Giao diện người dùng
+Giao diện thân thiện sử dụng Thymeleaf
+
+Thiết kế theo Glass UI
+
+Modal hiển thị form thêm/sửa không cần reload
+
+Phân trang bằng Thymeleaf
+
+Responsive, phù hợp cả desktop và mobile
+
+###🚀 Hướng dẫn chạy dự án
+
+# 1. Clone về máy
+git clone https://github.com/yourusername/warehouse-management-system.git
+cd warehouse-management-system
+
+# 2. Build & run
+./mvnw spring-boot:run
+
+# 3. Truy cập
+http://localhost:8080/
+
+📸 Demo và mô hình
+Biểu đồ UML
 
 ![Sequence Diagram](image/Digagram.PNG)
+
+Sequence Diagram
 ![Sequence Diagram](image/Sequence_Diagram.png)
+
+Activity Diagram
+
 ![Sequence Diagram](image/Activity_Diagram.png)
+
+
+Giao diện đăng nhập
+
 ![Sequence Diagram](image/login.jpg)
+
+
+Giao diện người dùng
+
 ![Sequence Diagram](image/UI.jpg)
 
+
+📬 Góp ý & Liên hệ
+Hãy tạo issue hoặc pull request nếu bạn muốn đóng góp.
+Chúng tôi sẵn sàng tiếp nhận mọi ý kiến để cải thiện dự án tốt hơn!
 
 
