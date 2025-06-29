@@ -1,8 +1,11 @@
+# Ưu tiên Java là ngôn ngữ chính
 *.java linguist-language=Java
 
-# Ẩn toàn bộ template phụ + giao diện
-gs-serving-web-content-main/complete/templates/fragments/** linguist-vendored
+# Ẩn HTML phụ theo giao diện người dùng
 gs-serving-web-content-main/complete/templates/customer/** linguist-vendored
 gs-serving-web-content-main/complete/templates/seller/** linguist-vendored
 gs-serving-web-content-main/complete/templates/manager/** linguist-vendored
+
+# Ẩn giao diện bổ trợ khác nếu cần (bạn có thể thêm nếu muốn):
+gs-serving-web-content-main/complete/templates/fragments/** linguist-vendored
 gs-serving-web-content-main/complete/static/** linguist-vendored
