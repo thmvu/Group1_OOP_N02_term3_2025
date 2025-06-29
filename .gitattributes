@@ -1,9 +1,8 @@
 # Ưu tiên Java là ngôn ngữ chính
 *.java linguist-language=Java
 
-# Ẩn bớt HTML phụ (template phụ + css/js) để giảm tỷ lệ HTML
+# Ẩn các file HTML phụ và file tĩnh khỏi thống kê ngôn ngữ
 gs-serving-web-content-main/complete/templates/fragments/** linguist-vendored
 gs-serving-web-content-main/complete/static/** linguist-vendored
 
-# ⚠️ KHÔNG ẩn toàn bộ HTML
-# KHÔNG viết: *.html linguist-vendored
+# ⚠️ Không ẩn toàn bộ HTML để GitHub vẫn hiển thị HTML nhẹ nhẹ
