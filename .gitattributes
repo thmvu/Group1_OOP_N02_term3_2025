@@ -1,4 +1,9 @@
+# Ưu tiên Java là ngôn ngữ chính
 *.java linguist-language=Java
-*.html linguist-language=HTML
-*.css linguist-language=CSS
-*.js linguist-language=JavaScript
+
+# Đánh dấu các file .html là phụ (không tính %)
+*.html linguist-vendored
+
+# Cũng có thể đánh dấu các thư mục giao diện nếu muốn
+src/main/resources/templates/** linguist-vendored
+src/main/resources/static/** linguist-vendored
