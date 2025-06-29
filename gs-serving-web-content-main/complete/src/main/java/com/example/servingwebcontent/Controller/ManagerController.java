@@ -1,4 +1,4 @@
-    package com.example.servingwebcontent.Controller;
+package com.example.servingwebcontent.Controller;
     
 import java.util.List;
 import java.util.stream.Collectors;
@@ -95,13 +95,27 @@ public class ManagerController {
 
     // ========== QUẢN LÝ NGƯỜI DÙNG ==========
     @GetMapping("/users")
-    public String userPage(Model model) {
-        model.addAttribute("users", userDAO.getAllUsers());
-        return "manager_user_list";
+    public String userPage(Model model, @RequestParam(value = "keyword", required = false) String keyword) {
+    try {
+        List<User> users = userDAO.getAllUsers();
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            users = users.stream().filter(u ->
+                    u.getFullName().toLowerCase().contains(keyword.toLowerCase()) ||
+                    u.getEmail().toLowerCase().contains(keyword.toLowerCase()) ||
+                    u.getRole().toLowerCase().contains(keyword.toLowerCase())
+            ).collect(Collectors.toList());
+            model.addAttribute("keyword", keyword);
+        }
+        model.addAttribute("users", users);
+    } catch (Exception e) {
+        model.addAttribute("error", "Lỗi khi tải danh sách người dùng: " + e.getMessage());
+    }
+    return "manager_user_list";
     }
 
     @PostMapping("/users/save")
-    public String saveUser(@ModelAttribute User user) {
+    public String saveUser(@ModelAttribute User user, Model model) {
+    try {
         if (user.getUserID() == null || user.getUserID().trim().isEmpty()) {
             String newId = "cust" + System.currentTimeMillis();
             user.setUserID(newId);
@@ -109,25 +123,47 @@ public class ManagerController {
         } else {
             userDAO.updateUser(user);
         }
-        return "redirect:/manager/users";
+    } catch (Exception e) {
+        model.addAttribute("error", "Lỗi khi lưu người dùng: " + e.getMessage());
+    }
+    return "redirect:/manager/users";
     }
 
     @GetMapping("/users/delete/{id}")
-    public String deleteUser(@PathVariable String id) {
+    public String deleteUser(@PathVariable String id, Model model) {
+    try {
         userDAO.deleteUser(id);
-        return "redirect:/manager/users";
+    } catch (Exception e) {
+        model.addAttribute("error", "Lỗi khi xóa người dùng: " + e.getMessage());
+    }
+    return "redirect:/manager/users";
     }
 
     // ========== QUẢN LÝ HÓA ĐƠN ==========
     @GetMapping("/invoices")
-    public String invoicePage(Model model) {
-        model.addAttribute("invoices", invoiceDAO.getAllInvoices());
-        return "manager_invoice_list";
+    public String invoicePage(Model model, @RequestParam(value = "keyword", required = false) String keyword) {
+    try {
+        List<com.example.servingwebcontent.model.Invoice> invoices = invoiceDAO.getAllInvoices();
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            invoices = invoices.stream()
+                    .filter(inv -> inv.getCustomer().getFullName().toLowerCase().contains(keyword.toLowerCase()))
+                    .collect(Collectors.toList());
+            model.addAttribute("keyword", keyword);
+        }
+        model.addAttribute("invoices", invoices);
+    } catch (Exception e) {
+        model.addAttribute("error", "Lỗi khi tải hóa đơn: " + e.getMessage());
+    }
+    return "manager_invoice_list";
     }
 
     @GetMapping("/invoices/delete/{id}")
-    public String deleteInvoice(@PathVariable String id) {
+    public String deleteInvoice(@PathVariable String id, Model model) {
+    try {
         invoiceDAO.deleteInvoice(id);
-        return "redirect:/manager/invoices";
+    } catch (Exception e) {
+        model.addAttribute("error", "Lỗi khi xóa hóa đơn: " + e.getMessage());
+    }
+    return "redirect:/manager/invoices";
     }
 }
