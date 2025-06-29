@@ -1,8 +1,9 @@
 # Ưu tiên Java là ngôn ngữ chính
 *.java linguist-language=Java
 
-# Ẩn các file HTML phụ và file tĩnh khỏi thống kê ngôn ngữ
+# Ẩn toàn bộ HTML phụ
 gs-serving-web-content-main/complete/templates/fragments/** linguist-vendored
 gs-serving-web-content-main/complete/static/** linguist-vendored
 
-# ⚠️ Không ẩn toàn bộ HTML để GitHub vẫn hiển thị HTML nhẹ nhẹ
+# KHÔNG ẩn toàn bộ *.html
+# Để GitHub vẫn nhận một chút HTML
