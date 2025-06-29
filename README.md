@@ -145,10 +145,12 @@ Sequence Diagram
 ![Sequence Diagram](image/Sequence_Diagram.png)
 
 Activity Diagram
+
 ![Sequence Diagram](image/Activity_Diagram.png)
 
 
 Giao diện đăng nhập
+
 ![Sequence Diagram](image/login.jpg)
 
 
