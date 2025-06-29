@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class InvoiceDAO {
-    
+
     private final UserDAO userDAO = new UserDAOImpl();
     private final ProductDAO productDAO = new ProductDAOImpl();
 
@@ -21,14 +21,12 @@ public class InvoiceDAO {
             try (PreparedStatement pstmtInvoice = conn.prepareStatement(sqlInvoice);
                  PreparedStatement pstmtItem = conn.prepareStatement(sqlItem)) {
 
-                // ✅ Thêm hóa đơn chính
                 pstmtInvoice.setString(1, invoice.getInvoiceId());
                 pstmtInvoice.setString(2, invoice.getCustomer().getUserID());
                 pstmtInvoice.setTimestamp(3, Timestamp.valueOf(invoice.getCreatedAt()));
                 pstmtInvoice.setString(4, invoice.getStatus());
                 pstmtInvoice.executeUpdate();
 
-                // ✅ Thêm các item của hóa đơn
                 for (InvoiceItem item : invoice.getItems()) {
                     pstmtItem.setString(1, invoice.getInvoiceId());
                     pstmtItem.setInt(2, item.getProduct().getProductId());
@@ -64,7 +62,7 @@ public class InvoiceDAO {
                 Invoice invoice = extractInvoice(rs);
                 invoice.setItems(getItemsByInvoiceId(invoice.getInvoiceId()));
                 invoice.setTotalAmount(
-                    invoice.getItems().stream().mapToDouble(InvoiceItem::getTotalPrice).sum()
+                        invoice.getItems().stream().mapToDouble(InvoiceItem::getTotalPrice).sum()
                 );
                 list.add(invoice);
             }
@@ -88,7 +86,7 @@ public class InvoiceDAO {
                 Invoice invoice = extractInvoice(rs);
                 invoice.setItems(getItemsByInvoiceId(invoiceId));
                 invoice.setTotalAmount(
-                    invoice.getItems().stream().mapToDouble(InvoiceItem::getTotalPrice).sum()
+                        invoice.getItems().stream().mapToDouble(InvoiceItem::getTotalPrice).sum()
                 );
                 return invoice;
             }
@@ -113,7 +111,7 @@ public class InvoiceDAO {
                 Invoice invoice = extractInvoice(rs);
                 invoice.setItems(getItemsByInvoiceId(invoice.getInvoiceId()));
                 invoice.setTotalAmount(
-                    invoice.getItems().stream().mapToDouble(InvoiceItem::getTotalPrice).sum()
+                        invoice.getItems().stream().mapToDouble(InvoiceItem::getTotalPrice).sum()
                 );
                 list.add(invoice);
             }
@@ -152,17 +150,47 @@ public class InvoiceDAO {
         return items;
     }
 
+    public boolean deleteInvoice(String invoiceId) {
+        String sqlDeleteItems = "DELETE FROM invoice_items WHERE invoice_id = ?";
+        String sqlDeleteInvoice = "DELETE FROM invoices WHERE invoice_id = ?";
+
+        try (Connection conn = aivenConnection.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement pstmtItems = conn.prepareStatement(sqlDeleteItems);
+                 PreparedStatement pstmtInvoice = conn.prepareStatement(sqlDeleteInvoice)) {
+
+                pstmtItems.setString(1, invoiceId);
+                pstmtItems.executeUpdate();
+
+                pstmtInvoice.setString(1, invoiceId);
+                int rowsAffected = pstmtInvoice.executeUpdate();
+
+                conn.commit();
+                return rowsAffected > 0;
+
+            } catch (Exception ex) {
+                conn.rollback();
+                ex.printStackTrace();
+                return false;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private Invoice extractInvoice(ResultSet rs) throws SQLException {
         String invoiceId = rs.getString("invoice_id");
         String customerId = rs.getString("customer_id");
         LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
         String status = rs.getString("status");
 
-        // ⚠️ Chuyển đổi từ User sang Customer an toàn
         User u = userDAO.getUserById(customerId);
         Customer customer = new Customer(
-            u.getUserID(), u.getFullName(), u.getGender(), u.getDob(),
-            u.getPhone(), u.getEmail(), u.getAddress(), u.getPassword()
+                u.getUserID(), u.getFullName(), u.getGender(), u.getDob(),
+                u.getPhone(), u.getEmail(), u.getAddress(), u.getPassword()
         );
 
         return new Invoice(invoiceId, customer, createdAt, status);

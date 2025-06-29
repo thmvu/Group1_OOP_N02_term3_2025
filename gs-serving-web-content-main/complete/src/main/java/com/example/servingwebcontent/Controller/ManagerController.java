@@ -1,113 +1,133 @@
     package com.example.servingwebcontent.Controller;
     
-    import com.example.servingwebcontent.database.ProductDAO;
-    import com.example.servingwebcontent.database.ProductDAOImpl;
-    import com.example.servingwebcontent.database.StatisticsDAO;
-    import com.example.servingwebcontent.database.StatisticsDAOImpl;
-    import com.example.servingwebcontent.database.UserDAO;
-    import com.example.servingwebcontent.database.UserDAOImpl;
-    import com.example.servingwebcontent.model.Product;
-    import com.example.servingwebcontent.model.User;
-    import org.springframework.beans.propertyeditors.CustomNumberEditor;
-    import org.springframework.stereotype.Controller;
-    import org.springframework.ui.Model;
-    import org.springframework.web.bind.WebDataBinder;
-    import org.springframework.web.bind.annotation.*;
-    
-    import java.util.List;
+import java.util.List;
+import java.util.stream.Collectors;
 
-    @Controller
-    @RequestMapping("/manager")
-    public class ManagerController {
+import org.springframework.beans.propertyeditors.CustomNumberEditor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.servingwebcontent.database.InvoiceDAO;
+import com.example.servingwebcontent.database.ProductDAO;
+import com.example.servingwebcontent.database.ProductDAOImpl;
+import com.example.servingwebcontent.database.StatisticsDAO;
+import com.example.servingwebcontent.database.StatisticsDAOImpl;
+import com.example.servingwebcontent.database.UserDAO;
+import com.example.servingwebcontent.database.UserDAOImpl;
+import com.example.servingwebcontent.model.Product;
+import com.example.servingwebcontent.model.User;
+
+@Controller
+@RequestMapping("/manager")
+public class ManagerController {
 
     private final UserDAO userDAO = new UserDAOImpl();
     private final ProductDAO productDAO = new ProductDAOImpl();
     private final StatisticsDAO statsDAO = new StatisticsDAOImpl();
+    private final InvoiceDAO invoiceDAO = new InvoiceDAO();
 
-    // Cho phép "" ánh xạ thành null khi binding int
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(int.class, new CustomNumberEditor(Integer.class, true));
     }
 
-    @GetMapping("/home")
-    public String managerHome(Model model) {
-        List<User> users = userDAO.getAllUsers();
+   @GetMapping("/home")
+    public String managerHome(Model model,
+                          @RequestParam(value = "keyword", required = false) String keyword) {
+    model.addAttribute("statistics", List.of(
+        new Object[]{"Người dùng", statsDAO.getTotalUsers()},
+        new Object[]{"Khách hàng", statsDAO.getTotalCustomers()},
+        new Object[]{"Nhà cung cấp", statsDAO.getTotalSellers()},
+        new Object[]{"Sản phẩm", statsDAO.getTotalProducts()},
+        new Object[]{"Giao dịch", statsDAO.getTotalTransactions()},
+        new Object[]{"Doanh thu", statsDAO.getTotalRevenue()}
+    ));
+
+    List<Product> products = productDAO.getAllProducts();
+    if (keyword != null && !keyword.trim().isEmpty()) {
+        products = products.stream()
+                .filter(p -> p.getProductName().toLowerCase().contains(keyword.toLowerCase()))
+                .toList();
+        model.addAttribute("keyword", keyword);
+    }
+
+    model.addAttribute("products", products);
+    return "manager_home";
+    }
+
+    // ========== QUẢN LÝ SẢN PHẨM ==========
+    @GetMapping("/products")
+    public String productPage(Model model, @RequestParam(value = "keyword", required = false) String keyword) {
         List<Product> products = productDAO.getAllProducts();
-
-        model.addAttribute("users", users);
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            products = products.stream()
+                .filter(p -> p.getProductName().toLowerCase().contains(keyword.toLowerCase()))
+                .collect(Collectors.toList());
+            model.addAttribute("keyword", keyword);
+        }
         model.addAttribute("products", products);
-
-        List<Object[]> statistics = List.of(
-            new Object[]{"Người dùng", statsDAO.getTotalUsers()},
-            new Object[]{"Khách hàng", statsDAO.getTotalCustomers()},
-            new Object[]{"Nhà cung cấp", statsDAO.getTotalSellers()},
-            new Object[]{"Sản phẩm", statsDAO.getTotalProducts()},
-            new Object[]{"Giao dịch", statsDAO.getTotalTransactions()},
-            new Object[]{"Doanh thu", statsDAO.getTotalRevenue()}
-        );
-        model.addAttribute("statistics", statistics);
-
-        model.addAttribute("formAction", "/manager/products/save");
-        model.addAttribute("backUrl", "/manager/home");
-        model.addAttribute("isManager", true);
-
-        return "manager_home";
+        return "manager_product_list";
     }
 
-    // ========== USER ==========
+    @PostMapping("/products/save")
+    public String saveProduct(@ModelAttribute Product product) {
+        if (product.getProductId() == null || product.getProductId() == 0) {
+            productDAO.addProduct(product);
+        } else {
+            productDAO.updateProduct(product);
+        }
+        return "redirect:/manager/products";
+    }
+
+    @GetMapping("/products/delete/{id}")
+    public String deleteProduct(@PathVariable int id) {
+        productDAO.deleteProduct(id);
+        return "redirect:/manager/products";
+    }
+
+    // ========== QUẢN LÝ NGƯỜI DÙNG ==========
     @GetMapping("/users")
-    public String listUsers() {
-        return "redirect:/manager/home";
-    }
-
-    @GetMapping("/users/add")
-    public String showAddUserForm(Model model) {
-        model.addAttribute("user", new User());
-        return "manager_user_form";
-    }
-
-    @GetMapping("/users/edit/{id}")
-    public String showEditUserForm(@PathVariable("id") String id, Model model) {
-        User user = userDAO.getUserById(id);
-        model.addAttribute("user", user);
-        return "manager_user_form";
+    public String userPage(Model model) {
+        model.addAttribute("users", userDAO.getAllUsers());
+        return "manager_user_list";
     }
 
     @PostMapping("/users/save")
-    public String saveUser(@ModelAttribute("user") User user) {
+    public String saveUser(@ModelAttribute User user) {
         if (user.getUserID() == null || user.getUserID().trim().isEmpty()) {
-            // Sinh ID tự động nếu không có
-            String generatedId = "cust" + System.currentTimeMillis();
-            user.setUserID(generatedId);
-            System.out.println(">> [ADD] ID sinh tự động: " + generatedId);
+            String newId = "cust" + System.currentTimeMillis();
+            user.setUserID(newId);
             userDAO.addUser(user);
         } else {
-            System.out.println(">> [UPDATE] Cập nhật user ID: " + user.getUserID());
             userDAO.updateUser(user);
         }
-        return "redirect:/manager/home";
+        return "redirect:/manager/users";
     }
 
     @GetMapping("/users/delete/{id}")
-    public String deleteUser(@PathVariable("id") String id) {
+    public String deleteUser(@PathVariable String id) {
         userDAO.deleteUser(id);
-        return "redirect:/manager/home";
+        return "redirect:/manager/users";
     }
 
-    // ========== PRODUCT ==========
-    @PostMapping("/products/save")
-    public String saveProduct(@ModelAttribute Product product) {
-    if (product.getProductId() == null || product.getProductId() == 0) {
-        productDAO.addProduct(product);
-    } else {
-        productDAO.updateProduct(product);
+    // ========== QUẢN LÝ HÓA ĐƠN ==========
+    @GetMapping("/invoices")
+    public String invoicePage(Model model) {
+        model.addAttribute("invoices", invoiceDAO.getAllInvoices());
+        return "manager_invoice_list";
     }
-    return "redirect:/manager/home";
-    }
-    @GetMapping("/products/delete/{id}")
-    public String deleteProduct(@PathVariable("id") int id) {
-        productDAO.deleteProduct(id);
-        return "redirect:/manager/home";
+
+    @GetMapping("/invoices/delete/{id}")
+    public String deleteInvoice(@PathVariable String id) {
+        invoiceDAO.deleteInvoice(id);
+        return "redirect:/manager/invoices";
     }
 }
