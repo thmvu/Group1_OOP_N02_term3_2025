@@ -1,9 +1,12 @@
-# Ưu tiên Java là ngôn ngữ chính
+# Ưu tiên Java
 *.java linguist-language=Java
 
-# Đánh dấu các file .html là phụ (không tính %)
-*.html linguist-vendored
+# ❌ KHÔNG đánh dấu *.html là vendored để nó tính %
+# (Có thể giữ CSS và JS là phụ nếu không muốn tính)
 
-# Cũng có thể đánh dấu các thư mục giao diện nếu muốn
-src/main/resources/templates/** linguist-vendored
+*.css linguist-vendored
+*.js linguist-vendored
+
+# Nếu muốn, có thể ẩn bớt template phụ
+# nhưng vẫn giữ vài file HTML chính để tăng % HTML
 src/main/resources/static/** linguist-vendored
