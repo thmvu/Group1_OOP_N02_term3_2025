@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Seller Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-primary">📦 Quản lý sản phẩm</h1>
+        <a href="/logout" class="btn btn-outline-danger">Đăng xuất</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="card-title">Danh sách sản phẩm của bạn</h4>
+                <a href="/products/add" class="btn btn-success">➕ Thêm sản phẩm</a>
+            </div>
+
+            <div th:if="${products.size() == 0}">
+                <p class="text-muted">Bạn chưa có sản phẩm nào.</p>
+            </div>
+
+            <table class="table table-bordered table-hover" th:if="${products.size() > 0}">
+                <thead class="table-primary">
+                    <tr>
+                        <th>#</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Mô tả</th>
+                        <th>Giá (VNĐ)</th>
+                        <th>Số lượng</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="product, iterStat : ${products}">
+                        <td th:text="${iterStat.index + 1}">1</td>
+                        <td th:text="${product.productName}">Tên</td>
+                        <td th:text="${product.description}">Mô tả</td>
+                        <td th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')}">Giá</td>
+                        <td th:text="${product.stock}">Số lượng</td>
+                        <td>
+                            <a th:href="@{'/products/edit/' + ${product.productId}}" class="btn btn-sm btn-warning">✏️ Sửa</a>
+                            <a th:href="@{'/products/delete/' + ${product.productId}}" 
+                               class="btn btn-sm btn-danger"
+                               onclick="return confirm('Bạn chắc chắn muốn xoá sản phẩm này?');">🗑️ Xoá</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

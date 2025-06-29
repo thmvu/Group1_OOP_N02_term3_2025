@@ -7,6 +7,11 @@ public class Product {
     private double price;            // Giá sản phẩm
     private int stock;               // Số lượng sản phẩm
     private String description;      // Mô tả sản phẩm
+     // ✅ Thêm dòng này nếu chưa có
+    private String imageUrl;
+
+    // Getter & Setter cho imageUrl
+  
 
     // Constructor mặc định
     public Product() {
@@ -16,6 +21,7 @@ public class Product {
         this.price = 0.0;
         this.stock = 0;
         this.description = "";
+        this.imageUrl = null;
     }
 
     // Constructor với productId
@@ -26,7 +32,9 @@ public class Product {
         this.price = 0.0;
         this.stock = 0;
         this.description = "Không có mô tả";
+        this.imageUrl = null;
     }
+   
 
     // Getter và Setter
     public Integer getProductId() { return productId; }
@@ -46,6 +54,13 @@ public class Product {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+    }
+    public String getImageUrl() {
+    return imageUrl;
+    }
 
     // Phương thức hiển thị thông tin sản phẩm
     public void displayProductInfo() {

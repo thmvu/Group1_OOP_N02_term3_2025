@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Giỏ hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-yellow-50">
+    <!-- Header -->
+    <div class="bg-indigo-900 text-white text-center py-10 relative">
+        <div class="absolute top-0 left-0 w-full overflow-hidden">
+            <svg viewBox="0 0 1440 150" class="fill-current text-orange-400">
+                <path d="M0,64L80,74.7C160,85,320,107,480,101.3C640,96,800,64,960,58.7C1120,53,1280,75,1360,85.3L1440,96L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold z-10 relative">Shopping Cart</h1>
+    </div>
+
+    <!-- Main content -->
+    <div class="max-w-6xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+        <form method="post" action="/cart/checkout">
+            <div class="flex justify-between items-start gap-10">
+
+                <!-- Cart Table -->
+                <div class="w-2/3">
+                    <a href="/customer/home" class="text-blue-500 underline mb-4 inline-block">← back to shop</a>
+                    <table class="w-full text-left border-t border-b">
+                        <thead>
+                            <tr class="border-b">
+                                <th></th>
+                                <th class="py-2">Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="item : ${session.cart}" class="border-b py-4">
+                                <td class="text-center">
+                                    <input type="checkbox" name="selectedItems" th:value="${item.product.productId}" class="form-checkbox h-5 w-5 text-indigo-600">
+                                </td>
+                                <td class="py-4 flex gap-4 items-center">
+                                    <img th:src="${item.product.imageUrl != null} ? @{/images/{img}(img=${item.product.imageUrl})} : @{/images/default.jpg}" class="w-16 h-16 rounded bg-gray-200 object-cover" alt="">
+                                    <div>
+                                        <div th:text="${item.product.productName}" class="font-semibold">Product</div>
+                                        <div class="text-gray-500 text-sm" th:text="${item.product.description}">Mô tả</div>
+                                    </div>
+                                </td>
+                                <td th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000</td>
+                                <td>
+                                    <div class="flex items-center border rounded w-max px-2">
+                                        <span th:text="${item.quantity}" class="px-2">1</span>
+                                    </div>
+                                </td>
+                                <td th:text="${#numbers.formatDecimal(item.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">100.000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Summary box -->
+                <div class="w-1/3 bg-yellow-100 rounded-lg p-6 shadow">
+                    <h2 class="text-xl font-bold border-b pb-2 mb-4">Summary</h2>
+                    <div class="flex justify-between mb-2">
+                        <span>Subtotal</span>
+                        <span th:text="${session.cart != null} ? ${session.cart.size()} + ' sản phẩm' : '0 sản phẩm'">0 sản phẩm</span>
+                    </div>
+                    <div class="flex justify-between mb-4">
+                        <span>Tổng tiền</span>
+                        <span th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+                    </div>
+                    <button type="submit" class="bg-red-500 text-white py-2 px-4 w-full rounded hover:bg-red-600">
+                        Proceed to Checkout
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,19 +1,18 @@
 package com.example.servingwebcontent.database;
 
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.servingwebcontent.model.*;
 import com.example.servingwebcontent.database.aivenConnection;
-import com.example.servingwebcontent.database.UserDAO;
-
-
-import com.example.servingwebcontent.model.User;
 
 public class UserDAOImpl implements UserDAO {
 
@@ -103,7 +102,6 @@ public class UserDAOImpl implements UserDAO {
         return null;
     }
 
-    // ✅ Hàm phục vụ đăng nhập
     @Override
     public User findByUsername(String username) {
         String sql = "SELECT * FROM users WHERE phone = ? OR email = ?";
@@ -120,52 +118,47 @@ public class UserDAOImpl implements UserDAO {
         }
         return null;
     }
-@Override
-public User getUserByEmailAndPassword(String email, String password) {
-    User user = null;
-    try (Connection conn = aivenConnection.getConnection()) {
-        String query = "SELECT * FROM users WHERE email = ? AND password = ?";
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setString(1, email);
-        stmt.setString(2, password);
 
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-            user = new User();
-            user.setUserID(rs.getString("user_id"));
-            user.setFullName(rs.getString("full_name"));
-            user.setGender(rs.getString("gender"));
-            java.sql.Date dobDate = rs.getDate("dob");
-            user.setDob(dobDate != null ? dobDate.toString() : null);
-            user.setPhone(rs.getString("phone"));
-            user.setEmail(rs.getString("email"));
-            user.setAddress(rs.getString("address"));
-            user.setPassword(rs.getString("password"));
-            user.setRole(rs.getString("role"));
+    @Override
+    public User getUserByEmailAndPassword(String email, String password) {
+        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+        try (Connection conn = aivenConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToUser(rs);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        rs.close();
-        stmt.close();
-    } catch (Exception e) {
-        e.printStackTrace();
+        return null;
     }
-
-    return user;
-}
 
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
-        User user = new User(null, null, null, null, null, null, null, null, null);
-        user.setUserID(rs.getString("user_id"));
-        user.setFullName(rs.getString("full_name"));
-        user.setGender(rs.getString("gender"));
-        java.sql.Date dobDate = rs.getDate("dob");
-        user.setDob(dobDate != null ? dobDate.toString() : null);
-        user.setPhone(rs.getString("phone"));
-        user.setEmail(rs.getString("email"));
-        user.setAddress(rs.getString("address"));
-        user.setPassword(rs.getString("password"));
-        user.setRole(rs.getString("role"));
-        return user;
-    }
+        String userId = rs.getString("user_id");
+        String fullName = rs.getString("full_name");
+        String gender = rs.getString("gender");
 
+        java.sql.Date dobDate = rs.getDate("dob");
+        LocalDate dob = dobDate != null ? dobDate.toLocalDate() : null;
+
+        String phone = rs.getString("phone");
+        String email = rs.getString("email");
+        String address = rs.getString("address");
+        String password = rs.getString("password");
+        String role = rs.getString("role");
+
+        switch (role.toUpperCase()) {
+            case "CUSTOMER":
+                return new Customer(userId, fullName, gender, dob, phone, email, address, password);
+            case "SELLER":
+                return new Seller(userId, fullName, gender, dob, phone, email, address, password);
+            case "MANAGER":
+                return new Manager(userId, fullName, gender, dob, phone, email, address, password);
+            default:
+                return new User(userId, fullName, gender, dob, phone, email, address, password, role);
+        }
+    }
 }

@@ -7,7 +7,7 @@ public class Manager extends User {
         this.setRole("manager");
     }
 
-    public Manager(String userID, String fullName, String gender, String dob,
+    public Manager(String userID, String fullName, String gender, java.time.LocalDate dob,
                    String phone, String email, String address, String password) {
         super(userID, fullName, gender, dob, phone, email, address, password, "manager");
     }

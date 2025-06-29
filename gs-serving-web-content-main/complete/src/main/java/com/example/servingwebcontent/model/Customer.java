@@ -2,7 +2,7 @@ package com.example.servingwebcontent.model;
 
 // Customer.java
 public class Customer extends User {
-    public Customer(String userID, String fullName, String gender, String dob, String phone, String email, String address, String password) {
+    public Customer(String userID, String fullName, String gender, java.time.LocalDate dob, String phone, String email, String address, String password) {
         super(userID, fullName, gender, dob, phone, email, address, password, "customer");
     }
     public Customer() {

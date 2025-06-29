@@ -10,6 +10,7 @@ public class Invoice {
     private LocalDateTime createdAt;
     private String status;
     private List<InvoiceItem> items = new ArrayList<>();
+    private double totalAmount;
 
     public Invoice(String invoiceId, Customer customer, LocalDateTime createdAt, String status) {
         this.invoiceId = invoiceId;
@@ -18,26 +19,47 @@ public class Invoice {
         this.status = status;
     }
 
-    public String getInvoiceId() { return invoiceId; }
-    public Customer getCustomer() { return customer; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public String getStatus() { return status; }
-    public List<InvoiceItem> getItems() { return items; }
+    public String getInvoiceId() {
+        return invoiceId;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public List<InvoiceItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<InvoiceItem> items) {
+        this.items = items;
+    }
 
     public void addItem(InvoiceItem item) {
         this.items.add(item);
     }
 
-    // ✅ Sửa lỗi: thêm setItems()
-    public void setItems(List<InvoiceItem> items) {
-        this.items = items;
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     @Override
     public String toString() {
         return "Invoice ID: " + invoiceId +
-               ", Customer: " + customer.getUserID() +
-               ", Date: " + createdAt +
-               ", Status: " + status;
+                ", Customer: " + customer.getUserID() +
+                ", Date: " + createdAt +
+                ", Status: " + status;
     }
 }
