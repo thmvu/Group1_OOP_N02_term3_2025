@@ -1,12 +1,10 @@
-# Ưu tiên Java
+# Ưu tiên Java là ngôn ngữ chính
 *.java linguist-language=Java
 
-# ❌ KHÔNG đánh dấu *.html là vendored để nó tính %
-# (Có thể giữ CSS và JS là phụ nếu không muốn tính)
-
-*.css linguist-vendored
-*.js linguist-vendored
-
-# Nếu muốn, có thể ẩn bớt template phụ
-# nhưng vẫn giữ vài file HTML chính để tăng % HTML
+# Ẩn một phần HTML (giao diện phụ), nhưng vẫn để lại HTML chính
+src/main/resources/templates/admin/** linguist-vendored
+src/main/resources/templates/includes/** linguist-vendored
 src/main/resources/static/** linguist-vendored
+
+# KHÔNG đánh dấu *.html toàn cục là vendored để GitHub vẫn nhận HTML
+# (Không viết dòng *.html linguist-vendored)
