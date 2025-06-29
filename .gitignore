@@ -1,49 +1,14 @@
-# ===================== #
-#   Java Spring Boot    #
-# ===================== #
+# VS Code
+.vscode/
+!.vscode/launch.json    # Giữ lại file launch nếu cần
 
-# Build output
-/build/
-/out/
-/target/
+# Properties
+*.env                   # Ignore file chứa mật khẩu
+!application.properties # Cho phép giữ lại
 
 # Gradle
 .gradle/
-**/.gradle/
-!gradle/wrapper/gradle-wrapper.jar
+build/
 
-# IDE configs
-.idea/
-*.iml
-
-# VS Code
-.vscode/
-
-# Logs & OS
+# Logs
 *.log
-*.tmp
-*.swp
-.DS_Store
-Thumbs.db
-
-# NetBeans cache (nếu dùng)
-**/nb-cache/
-*.ser
-
-# Class files
-*.class
-
-# System files
-*.orig
-*.rej
-
-# Node, nếu có dùng frontend
-node_modules/
-
-# Spring devtools
-.spring-boot-devtools.properties
-
-# Env & Secret
-.env
-.env.local
-*.env
