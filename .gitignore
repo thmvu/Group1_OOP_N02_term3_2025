@@ -1,32 +1,49 @@
-# Operating System Files
+# ===================== #
+#   Java Spring Boot    #
+# ===================== #
 
-*.DS_Store
-Thumbs.db
-*.sw?
-.#*
-*#
-*~
-*.sublime-*
+# Build output
+/build/
+/out/
+/target/
 
-# Build Artifacts
-
+# Gradle
 .gradle/
-build/
-target/
-bin/
-dependency-reduced-pom.xml
+**/.gradle/
+!gradle/wrapper/gradle-wrapper.jar
 
-# Eclipse Project Files
-
-.classpath
-.project
-.settings/
-
-# IntelliJ IDEA Files
-
+# IDE configs
+.idea/
 *.iml
-*.ipr
-*.iws
-*.idea
 
-README.html
+# VS Code
+.vscode/
+
+# Logs & OS
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+
+# NetBeans cache (nếu dùng)
+**/nb-cache/
+*.ser
+
+# Class files
+*.class
+
+# System files
+*.orig
+*.rej
+
+# Node, nếu có dùng frontend
+node_modules/
+
+# Spring devtools
+.spring-boot-devtools.properties
+
+# Env & Secret
+.env
+.env.local
+*.env
