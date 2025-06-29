@@ -1,10 +1,9 @@
 # Ưu tiên Java là ngôn ngữ chính
 *.java linguist-language=Java
 
-# Ẩn một phần HTML (giao diện phụ), nhưng vẫn để lại HTML chính
-src/main/resources/templates/admin/** linguist-vendored
-src/main/resources/templates/includes/** linguist-vendored
-src/main/resources/static/** linguist-vendored
+# Ẩn bớt HTML phụ (template phụ + css/js) để giảm tỷ lệ HTML
+gs-serving-web-content-main/complete/templates/fragments/** linguist-vendored
+gs-serving-web-content-main/complete/static/** linguist-vendored
 
-# KHÔNG đánh dấu *.html toàn cục là vendored để GitHub vẫn nhận HTML
-# (Không viết dòng *.html linguist-vendored)
+# ⚠️ KHÔNG ẩn toàn bộ HTML
+# KHÔNG viết: *.html linguist-vendored
