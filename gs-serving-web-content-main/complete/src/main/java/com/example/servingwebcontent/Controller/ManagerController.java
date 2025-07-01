@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.Controller;
     
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,8 @@ import com.example.servingwebcontent.database.UserDAO;
 import com.example.servingwebcontent.database.UserDAOImpl;
 import com.example.servingwebcontent.model.Product;
 import com.example.servingwebcontent.model.User;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/manager")
@@ -166,4 +169,90 @@ public class ManagerController {
     }
     return "redirect:/manager/invoices";
     }
+
+    @GetMapping("/invoices/export/{id}")
+    public void exportInvoiceTxt(@PathVariable String id, HttpServletResponse response) {
+    try {
+        var invoice = invoiceDAO.getInvoiceById(id);
+        if (invoice == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy hóa đơn");
+            return;
+        }
+
+        response.setContentType("text/plain; charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=invoice_" + id + ".txt");
+
+        PrintWriter writer = response.getWriter();
+
+        writer.println("========= HÓA ĐƠN =========");
+        writer.println("Mã HĐ        : " + invoice.getInvoiceId());
+        writer.println("Khách hàng   : " + invoice.getCustomer().getFullName());
+        writer.println("Ngày tạo     : " + invoice.getCreatedAt());
+        writer.println("Trạng thái   : " + invoice.getStatus());
+        writer.println("----------------------------");
+        writer.println("Sản phẩm đã mua:");
+
+        for (var item : invoice.getItems()) {
+            long total = (long) (item.getUnitPrice() * item.getQuantity());
+            writer.printf("- %s | SL: %d | Đơn giá: %,d₫ | Thành tiền: %,d₫%n",
+                    item.getProduct().getProductName(),
+                    item.getQuantity(),
+                    (long) item.getUnitPrice(),
+                    total);
+        }
+
+        writer.println("----------------------------");
+        writer.printf("TỔNG CỘNG: %,d₫%n", (long) invoice.getTotalAmount());
+        writer.println("============================");
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }
+
+    @PostMapping("/invoices/export-multiple")
+    public void exportMultipleInvoices(@RequestParam(value = "selectedIds", required = false) List<String> selectedIds,
+                                   HttpServletResponse response) {
+    try {
+        if (selectedIds == null || selectedIds.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Không có hóa đơn nào được chọn.");
+            return;
+        }
+
+        response.setContentType("text/plain; charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=multi_invoices.txt");
+
+        PrintWriter writer = response.getWriter();
+
+        for (String id : selectedIds) {
+            var invoice = invoiceDAO.getInvoiceById(id);
+            if (invoice == null) continue;
+
+            writer.println("========= HÓA ĐƠN =========");
+            writer.println("Mã HĐ        : " + invoice.getInvoiceId());
+            writer.println("Khách hàng   : " + invoice.getCustomer().getFullName());
+            writer.println("Ngày tạo     : " + invoice.getCreatedAt());
+            writer.println("Trạng thái   : " + invoice.getStatus());
+            writer.println("----------------------------");
+            writer.println("Sản phẩm đã mua:");
+
+            for (var item : invoice.getItems()) {
+                long total = (long) (item.getUnitPrice() * item.getQuantity());
+                writer.printf("- %s | SL: %d | Đơn giá: %,d₫ | Thành tiền: %,d₫%n",
+                        item.getProduct().getProductName(),
+                        item.getQuantity(),
+                        (long) item.getUnitPrice(),
+                        total);
+            }
+
+            writer.println("----------------------------");
+            writer.printf("TỔNG CỘNG: %,d₫%n", (long) invoice.getTotalAmount());
+            writer.println("============================\n\n");
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }
+
 }
