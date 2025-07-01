@@ -8,7 +8,7 @@
 
 ## 👨‍💻 Nhóm phát triển
 
-- **Từ Hữu Minh Vũ**  
+- **Từ Hữu Minh Vũ (nhóm trưởng)**  
 - **Nguyễn Hữu Tình**  
 - **Vũ Viết Tuấn**
 
