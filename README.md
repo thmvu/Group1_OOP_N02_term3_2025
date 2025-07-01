@@ -139,15 +139,27 @@ http://localhost:8080/
 📸 Demo và mô hình
 Biểu đồ UML
 
-![Sequence Diagram](image/Digagram.PNG)
+![Sequence Diagram](image/UML.PNG)
 
 Sequence Diagram
-![Sequence Diagram](image/Sequence_Diagram.png)
+**1. đăng nhập**
+![Sequence Diagram](image/sequenlogin.png)
+**2.quản lí**
+![Sequence Diagram](image/sequenuser.png)
+
+![Sequence Diagram](image/sequenproduct.png)
+
+
 
 Activity Diagram
+**login**
+![Sequence Diagram](image/hoatdonglogin.png)
+**quản lí**
+![Sequence Diagram](image/hoatdongnguoidung.png)
 
-![Sequence Diagram](image/Activity_Diagram.png)
+![Sequence Diagram](image/hoatdongsanpham.png)
 
+![Sequence Diagram](image/hoatdonghoadon.png)
 
 Giao diện đăng nhập
 
