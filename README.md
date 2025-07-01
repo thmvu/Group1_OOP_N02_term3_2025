@@ -73,15 +73,15 @@ public class Invoice {
     private double totalAmount;
 }
 ```
-###⚙️ Tính năng hệ thống
-##👨‍⚖️ Phân quyền
+**⚙️ Tính năng hệ thống**
+**👨‍⚖️ Phân quyền**
 Customer: đăng nhập, mua hàng, xem hóa đơn
 
 Seller: đăng nhập, quản lý sản phẩm của mình
 
 Manager: toàn quyền quản lý người dùng, sản phẩm và hóa đơn
 
-##📦 Quản lý sản phẩm
+**📦 Quản lý sản phẩm**
 Thêm / sửa / xóa sản phẩm
 
 Gán sản phẩm cho người bán (seller)
@@ -90,14 +90,14 @@ Tìm kiếm sản phẩm theo từ khóa
 
 Hiển thị hình ảnh, mô tả, số lượng, giá
 
-##👥 Quản lý người dùng
+**👥 Quản lý người dùng**
 Thêm / sửa / xóa Customer, Seller, Manager
 
 Xem danh sách người dùng và vai trò
 
 Tìm kiếm người dùng theo tên, email
 
-##🧾 Quản lý hóa đơn
+**🧾 Quản lý hóa đơn**
 Tạo hóa đơn khi khách hàng đặt hàng
 
 Hiển thị các hóa đơn theo trạng thái
@@ -106,14 +106,14 @@ Xem chi tiết từng đơn hàng
 
 Quản lý lịch sử giao dịch
 
-##💾 Lưu trữ
+**💾 Lưu trữ**
 Dữ liệu có thể lưu trong CSDL MySQL hoặc file nhị phân
 
 Trong bộ nhớ sử dụng: ArrayList, Map, LinkedList, ...
 
 Có thể chuyển hóa sang dùng JPA nếu cần mở rộng quy mô
 
-##🖥️ Giao diện người dùng
+**🖥️ Giao diện người dùng**
 Giao diện thân thiện sử dụng Thymeleaf
 
 Thiết kế theo Glass UI
@@ -183,7 +183,7 @@ Quản lí hóa đơn
 ![Sequence Diagram](image/quanlihoadon.jpeg)
 
 
-📬 Góp ý & Liên hệ
+**📬 Góp ý & Liên hệ**
 Hãy tạo issue hoặc pull request nếu bạn muốn đóng góp.
 Chúng tôi sẵn sàng tiếp nhận mọi ý kiến để cải thiện dự án tốt hơn!
 
