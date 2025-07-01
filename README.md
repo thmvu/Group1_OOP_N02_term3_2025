@@ -139,7 +139,7 @@ http://localhost:8080/
 📸 Demo và mô hình
 Biểu đồ UML
 
-![Sequence Diagram](image/UML.PNG)
+![Sequence Diagram](image/UML.png)
 
 Sequence Diagram
 **1. đăng nhập**
