@@ -156,7 +156,19 @@ Giao diện đăng nhập
 
 Giao diện người dùng
 
-![Sequence Diagram](image/UI.jpg)
+![Sequence Diagram](image/giaodienquanli.jpg)
+
+Quản lí người dùng 
+
+![Sequence Diagram](image/quanlinguoidung.jpg)
+
+Quản lí sản phẩm 
+
+![Sequence Diagram](image/quanlisanpham.jpg)
+
+Quản lí hóa đơn 
+
+![Sequence Diagram](image/quanlihoadon.jpg)
 
 
 📬 Góp ý & Liên hệ
