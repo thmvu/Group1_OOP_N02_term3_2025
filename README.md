@@ -124,6 +124,21 @@ Phân trang bằng Thymeleaf
 
 Responsive, phù hợp cả desktop và mobile
 
+
+cấu trúc 
+src/
+├── main/
+│   ├── java/com/example/servingwebcontent/
+│   │   ├── controller/       # Xử lý yêu cầu và luồng dữ liệu
+│   │   ├── dao/              # Truy xuất dữ liệu
+│   │   ├── model/            # Lớp đối tượng dữ liệu (Product, User,...)
+│   │   └── database/         # Kết nối CSDL
+│   └── resources/
+│       ├── templates/        # Giao diện người dùng
+│       └── static/           # CSS, JS, ảnh tĩnh
+├── test/                     # Viết kiểm thử đơn vị (nếu có)
+
+
 ###🚀 Hướng dẫn chạy dự án
 
 # 1. Clone về máy
