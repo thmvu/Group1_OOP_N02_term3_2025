@@ -3,7 +3,7 @@
 !.vscode/launch.json    # Giữ lại file launch nếu cần
 
 # Properties
-*.env                   # Ignore file chứa mật khẩu
+!.env                   # Ignore file chứa mật khẩu
 !application.properties # Cho phép giữ lại
 
 # Gradle
